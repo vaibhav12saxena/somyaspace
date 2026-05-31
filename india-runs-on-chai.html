@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Runs on Chai · Somya Burman</title>
+<link href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inria Sans', sans-serif;
+  background: #FFC800;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+/* ─── TOP BAR ─── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  background: rgba(26,26,26,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+.back-link:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+.top-bar-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFC800;
+  letter-spacing: 0.02em;
+}
+
+/* ─── SECTIONS ─── */
+.chai-section {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.chai-section img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ─── REVEAL ANIMATION ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── SCROLL PROGRESS BAR ─── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: #FFC800;
+  z-index: 200;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #FFC800; }
+::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 3px; }
+
+@media (max-width: 768px) {
+  .top-bar { padding: 12px 16px; }
+  .top-bar-title { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ─── TOP BAR ─── -->
+<div class="top-bar">
+  <a href="somya-portfolio-v4.html#work" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back
+  </a>
+  <span class="top-bar-title">India Runs on Chai</span>
+</div>
+
+<!-- ─── HERO ─── -->
+<section class="chai-section" style="margin-top:48px">
+  <div class="reveal">
+    <img src="chai-assets/hero.png" alt="India runs on CHAI — A visual exploration depicting Chai and Coffee Habits Among Young Adults. Project by Somya Burman." loading="eager">
+  </div>
+</section>
+
+<!-- ─── CHAI SHOW ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/chai-show.png" alt="चाय — Chai in Hindi" loading="lazy">
+  </div>
+</section>
+
+<!-- ─── CONTEXT ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/context.png" alt="Context — We surveyed 75 young adults aged 20-35 across urban India to uncover how chai and coffee are consumed during a typical workday." loading="lazy">
+  </div>
+</section>
+
+<!-- ─── SNAPSHOTS ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/snapshots.png" alt="Snapshots — Most common coffee time: 10-11 AM and 3-4 PM. Most common chai time: 8-9 AM and 5-6 PM." loading="lazy">
+  </div>
+</section>
+
+<!-- ─── THE URBAN CAFFEINE CLOCK ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/caffeine-clock.png" alt="The Urban Caffeine Clock — Chai peaks at 6-9 AM (64%) and 5-6 PM (58%). Coffee peaks at 12-1 PM (64%). Green tea appears at 8-10 PM (14%)." loading="lazy">
+  </div>
+</section>
+
+<!-- ─── CHAI INTENTIONS & EMOTIONS ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/intentions.png" alt="CHAI — Intentions and Emotions. Comfort 62%, Family/Culture 34%." loading="lazy">
+  </div>
+</section>
+
+<!-- ─── RITUALS & HABITS ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/rituals.png" alt="Rituals and Habits — Team Chai: 55% make their own, 28% have family/partner make it, 17% chaiwala/street tea. Team Coffee: 48% use instant coffee, 27% brew/filter, 23% café takeout." loading="lazy">
+  </div>
+</section>
+
+<!-- ─── REFLECTIONS ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/reflections.png" alt="Reflections — While chai remains a deeply rooted comfort ritual, coffee has emerged as the productivity drink of urban professionals. Our data reveals how both drinks serve different emotional and cultural roles." loading="lazy">
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<section class="chai-section">
+  <div class="reveal">
+    <img src="chai-assets/footer.png" alt="Designed using Figma and fuelled by chai. Somya Burman, 2025." loading="lazy">
+  </div>
+</section>
+
+<script>
+// Scroll-triggered reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.08 });
+reveals.forEach(el => observer.observe(el));
+
+// Scroll progress bar
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('scrollProgress').style.width = progress + '%';
+});
+</script>
+
+</body>
+</html>

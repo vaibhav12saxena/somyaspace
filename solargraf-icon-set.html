@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solargraf Icon Set · Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --bg: #fdf6eb; --bg2: #f7eed8; --bg3: #f0e4c8;
+  --surface: #e6d5b0; --surface2: #d4c49a;
+  --text: #2c2416; --text2: #5e4e34; --text3: #8a7a60;
+  --accent: #c8197b; --accent2: #a01463;
+  --accent-dim: rgba(200,25,123,0.08); --accent-light: rgba(200,25,123,0.12);
+  --dark: #2c2416;
+  --border: 1.5px dashed rgba(44,36,22,0.15);
+  --border-solid: 1.5px solid rgba(44,36,22,0.12);
+  --radius: 12px; --radius-sm: 8px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --paper-shadow: 3px 3px 0px rgba(44,36,22,0.08);
+}
+body { font-family:'Inria Sans',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; line-height:1.7; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--surface); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--accent); }
+
+.top-bar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:56px; background:rgba(253,246,235,0.92); backdrop-filter:blur(16px); border-bottom:var(--border-solid); }
+.top-bar a { color:var(--text2); text-decoration:none; font-size:13px; transition:color var(--transition); }
+.top-bar a:hover { color:var(--accent); }
+.top-bar .back-link { font-weight:700; display:flex; align-items:center; gap:6px; color:var(--text); }
+.nav-links { display:flex; gap:24px; }
+.scroll-progress { position:fixed; top:56px; left:0; height:2px; background:var(--accent); z-index:101; width:0; transition:width 0.1s linear; }
+
+.case-section { padding:96px 48px; max-width:1200px; margin:0 auto; }
+.section-label { display:flex; align-items:center; gap:12px; font-family:'Playfair Display',serif; font-size:18px; font-weight:700; letter-spacing:0.04em; color:var(--accent); margin-bottom:16px; }
+.section-label-line { width:32px; height:2px; background:var(--accent); }
+.section-title { font-size:clamp(24px,3vw,36px); font-weight:800; line-height:1.2; margin-bottom:16px; color:var(--text); }
+.section-body { font-size:16px; color:var(--text2); max-width:720px; }
+.section-body p { margin-bottom:16px; }
+
+.hero-section { min-height:80vh; display:flex; flex-direction:column; justify-content:center; padding-top:120px; }
+.hero-tag { font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.hero-title { font-family:'Montserrat',sans-serif; font-size:clamp(40px,5vw,56px); font-weight:800; line-height:1.1; margin-bottom:8px; color:var(--text); }
+.hero-subtitle { font-family:'Montserrat',sans-serif; font-size:clamp(20px,3vw,32px); font-weight:300; color:var(--text2); margin-bottom:32px; }
+.hero-divider { width:100%; height:1.5px; border-top:1.5px dashed rgba(44,36,22,0.2); margin:32px 0; background:none; }
+.hero-meta { display:flex; gap:32px; flex-wrap:wrap; font-size:14px; color:var(--text3); margin-bottom:48px; }
+.hero-meta-item { display:flex; flex-direction:column; gap:4px; }
+.hero-meta-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text3); }
+.hero-meta-value { font-size:16px; font-weight:600; color:var(--text); }
+
+.cards-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:32px; }
+.info-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:28px; display:flex; flex-direction:column; gap:8px; transition:all var(--transition); box-shadow:var(--paper-shadow); }
+.info-card:hover { border-color:rgba(200,25,123,0.3); transform:translateY(-2px); box-shadow:4px 6px 0px rgba(200,25,123,0.1); }
+.info-card-icon { font-size:24px; margin-bottom:4px; }
+.info-card-title { font-size:16px; font-weight:700; color:var(--text); }
+.info-card-desc { font-size:14px; color:var(--text2); line-height:1.6; }
+.info-card-num { font-size:32px; font-weight:800; color:var(--accent); }
+
+.highlight-box { background:var(--accent-dim); border-left:3px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:20px 24px; font-size:15px; color:var(--text2); line-height:1.7; box-shadow:var(--paper-shadow); }
+
+.checklist-table { width:100%; margin-top:32px; border-collapse:separate; border-spacing:0 8px; }
+.checklist-table .cl-label { background:var(--accent); color:#fff; font-family:'Playfair Display',serif; font-size:18px; font-weight:700; padding:14px 20px; border-radius:var(--radius-sm) 0 0 var(--radius-sm); width:280px; white-space:nowrap; }
+.checklist-table .cl-value { background:var(--bg2); color:var(--text); font-family:'Inria Sans',sans-serif; font-size:15px; padding:14px 20px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; border:var(--border-solid); box-shadow:var(--paper-shadow); }
+
+.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:32px; }
+.compare-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:28px; box-shadow:var(--paper-shadow); }
+.compare-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px; }
+.compare-label.before { color:#d9534f; font-family:'Playfair Display',serif; font-size:16px; }
+.compare-label.after { color:#27ae60; font-family:'Playfair Display',serif; font-size:16px; }
+.compare-item { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+.compare-item span:first-child { flex-shrink:0; font-size:16px; }
+.compare-item span:last-child { font-size:14px; color:var(--text2); }
+
+.process-timeline { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:32px; }
+.process-step { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:24px; transition:all var(--transition); box-shadow:var(--paper-shadow); }
+.process-step:hover { border-color:rgba(200,25,123,0.3); transform:translateY(-2px); box-shadow:4px 6px 0px rgba(200,25,123,0.1); }
+.process-step-num { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--accent); margin-bottom:8px; }
+.process-step-title { font-size:15px; font-weight:700; margin-bottom:6px; color:var(--text); }
+.process-step-desc { font-size:13px; color:var(--text2); line-height:1.5; }
+
+.anatomy-img { width:100%; border-radius:var(--radius); margin-top:32px; }
+.full-width-section { background:var(--bg3); padding:96px 0; border-top:var(--border-solid); border-bottom:var(--border-solid); }
+.full-width-section .case-section { padding-top:0; padding-bottom:0; }
+
+.draft-img-wrap { margin-top:48px; position:relative; border-radius:var(--radius); overflow:hidden; border:var(--border-solid); background:var(--bg); box-shadow:var(--paper-shadow); }
+.draft-img-wrap img { width:100%; display:block; }
+.draft-img-label { position:absolute; top:16px; left:16px; background:rgba(200,25,123,0.85); color:#fff; font-family:'Playfair Display',serif; font-size:15px; font-weight:700; padding:6px 14px; border-radius:8px; letter-spacing:0.02em; backdrop-filter:blur(8px); }
+
+.icon-showcase { margin-top:48px; }
+.icon-showcase-header { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+.icon-showcase-badge { background:var(--accent); color:#fff; font-family:'Playfair Display',serif; font-size:16px; font-weight:700; letter-spacing:0.02em; padding:6px 16px; border-radius:20px; }
+.icon-showcase-count { font-size:13px; color:var(--text3); }
+.icon-categories { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:var(--border-solid); border-radius:var(--radius); overflow:hidden; background:var(--bg); box-shadow:var(--paper-shadow); }
+.icon-category { border-right:1px solid rgba(44,36,22,0.1); }
+.icon-category:last-child { border-right:none; }
+.icon-cat-header { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--text); padding:16px 20px; background:var(--bg3); border-bottom:1px solid rgba(44,36,22,0.1); letter-spacing:0.02em; position:relative; }
+.icon-cat-header::after { content:''; position:absolute; bottom:0; left:20px; right:20px; height:2px; background:var(--accent); }
+.icon-cat-list { list-style:none; padding:8px 0; }
+.icon-cat-item { font-size:13px; color:var(--text2); padding:7px 20px; border-bottom:1px dashed rgba(44,36,22,0.08); transition:all 0.15s ease; display:flex; align-items:center; gap:8px; }
+.icon-cat-item:last-child { border-bottom:none; }
+.icon-cat-item:hover { background:var(--accent-dim); color:var(--accent); }
+.icon-cat-item::before { content:''; width:4px; height:4px; border-radius:50%; background:var(--surface2); flex-shrink:0; transition:background 0.15s ease; }
+.icon-cat-item:hover::before { background:var(--accent); }
+
+.icon-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:4px; margin-top:32px; }
+.icon-grid-item { display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:10px; padding:24px 12px 18px; border-radius:var(--radius-sm); cursor:default; transition:all 0.2s ease; border:1.5px dashed transparent; min-height:100px; }
+.icon-grid-item:hover { background:var(--accent-dim); border-color:rgba(200,25,123,0.25); box-shadow:var(--paper-shadow); }
+.icon-grid-item svg { width:24px; height:24px; flex-shrink:0; color:var(--accent); }
+.icon-grid-item span { font-size:11px; color:var(--text2); text-align:center; line-height:1.3; word-break:break-word; font-family:'Montserrat',sans-serif; font-weight:500; }
+.icon-grid-item:hover span { color:var(--accent); }
+.icon-grid-item:hover svg { color:var(--accent2); transition:color 0.2s ease; }
+.icon-grid-search { display:flex; align-items:center; gap:12px; margin-top:24px; margin-bottom:8px; }
+.icon-grid-search input { flex:1; padding:10px 16px; border:var(--border); border-radius:var(--radius-sm); font-size:14px; font-family:'Inria Sans',sans-serif; background:var(--bg); color:var(--text); outline:none; transition:border-color 0.2s ease; }
+.icon-grid-search input:focus { border-color:var(--accent); }
+.icon-grid-search input::placeholder { color:var(--text3); }
+.icon-grid-count { font-size:12px; color:var(--text3); font-family:'Montserrat',sans-serif; font-weight:500; white-space:nowrap; }
+
+.reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.case-footer { text-align:center; padding:48px; font-size:13px; color:var(--text3); border-top:var(--border-solid); background:var(--bg3); }
+.case-footer a { color:var(--accent); text-decoration:none; }
+
+@media (max-width:900px) {
+  .case-section { padding:64px 24px; }
+  .cards-grid { grid-template-columns:1fr; }
+  .compare-grid { grid-template-columns:1fr; }
+  .process-timeline { grid-template-columns:repeat(2,1fr); }
+  .icon-categories { grid-template-columns:repeat(2,1fr); }
+  .icon-category:nth-child(2) { border-right:none; }
+  .icon-category { border-right:1px solid rgba(44,36,22,0.1); }
+  .nav-links { display:none; }
+  .checklist-table .cl-label { width:180px; font-size:13px; }
+  .checklist-table .cl-value { font-size:13px; }
+}
+@media (max-width:600px) {
+  .case-section { padding:48px 16px; }
+  .process-timeline { grid-template-columns:1fr; }
+  .hero-meta { flex-direction:column; gap:16px; }
+  .icon-categories { grid-template-columns:1fr; }
+  .icon-category { border-right:none !important; border-bottom:1px dashed rgba(44,36,22,0.1); }
+  .icon-category:last-child { border-bottom:none; }
+  .checklist-table .cl-label { width:auto; }
+  .checklist-table tr { display:flex; flex-direction:column; }
+  .checklist-table .cl-label { border-radius:var(--radius-sm) var(--radius-sm) 0 0; }
+  .checklist-table .cl-value { border-radius:0 0 var(--radius-sm) var(--radius-sm); }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-bar">
+  <a href="somya-portfolio-v4.html" class="back-link">← Back to Portfolio</a>
+  <div class="nav-links">
+    <a href="#sec-context">Context</a>
+    <a href="#sec-need">The Need</a>
+    <a href="#sec-checklist">Checklist</a>
+    <a href="#sec-process">Process</a>
+    <a href="#sec-icons">Icon Set</a>
+    <a href="#sec-impact">Impact</a>
+  </div>
+</nav>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- HERO -->
+<section class="case-section hero-section">
+  <div class="reveal">
+    <div class="hero-tag">Iconography · Visual Systems</div>
+    <div class="hero-title">Redesigning Iconography</div>
+    <div class="hero-subtitle">for Solargraf</div>
+    <div class="hero-divider"></div>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="hero-meta-label">Timeline</span><span class="hero-meta-value">3 months</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Role</span><span class="hero-meta-value">Individual Contributor</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Company</span><span class="hero-meta-value">Enphase Energy (Solargraf)</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Scope</span><span class="hero-meta-value">40+ icons redesigned</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEXT -->
+<section class="case-section case-sec" id="sec-context">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Context</div>
+    <h2 class="section-title">Solargraf needed a cohesive icon language</h2>
+    <div class="section-body">
+      <p>Solargraf is an end-to-end solar design software that streamlines everything from design and proposals to permitting for solar installers. The product had grown rapidly, and its iconography reflected that — icons were sourced from multiple places, had inconsistent stroke weights, mixed metaphors, and no unifying grid or style guide.</p>
+      <p>As the sole designer on this initiative, I took ownership of rebuilding the entire icon system from scratch — establishing a visual grammar that could scale with the product while maintaining clarity at every size.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S THE NEED -->
+<section class="case-section case-sec" id="sec-need">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> What's the Need?</div>
+    <h2 class="section-title">Problems in the current icon design</h2>
+    <div class="section-body">
+      <p>An audit of the existing icon system surfaced problems that went beyond aesthetics:</p>
+    </div>
+  </div>
+  <div class="cards-grid reveal" style="margin-top:32px">
+    <div class="info-card">
+      <div class="info-card-icon">🔀</div>
+      <div class="info-card-title">Irrelevant icons for various functionalities</div>
+      <div class="info-card-desc">Icons didn't communicate their intended meaning. For example, the Electrical Markers icon looked like a plug instead of representing markers on the design canvas.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">⚖️</div>
+      <div class="info-card-title">Inconsistent icon design language</div>
+      <div class="info-card-desc">Combination of filled and outline icons used inconsistently. Different visual weights — the same icon reused for Project and View Company.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🆕</div>
+      <div class="info-card-title">New icons needed for new features</div>
+      <div class="info-card-desc">As features grew, the product required new icons that couldn't be sourced from existing mismatched libraries while maintaining visual coherence.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🧩</div>
+      <div class="info-card-title">Icons sourced from different places</div>
+      <div class="info-card-desc">Icons pulled from multiple libraries with varying styles, weights, and visual logic — no single source of truth existed.</div>
+    </div>
+  </div>
+  <div class="highlight-box reveal" style="margin-top:32px">
+    <strong>Key insight:</strong> The inconsistency wasn't just visual — it was cognitive. Users were learning different visual languages in different parts of the same product, creating unnecessary cognitive load.
+  </div>
+  <div class="reveal" style="margin-top:48px">
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-label before">Before — Issues found</div>
+        <div class="compare-item"><span style="color:#d9534f">✕</span><span>Mixed stroke weights (1px, 1.5px, 2px) within the same view</span></div>
+        <div class="compare-item"><span style="color:#d9534f">✕</span><span>Inconsistent corner radii — sharp corners next to fully rounded icons</span></div>
+        <div class="compare-item"><span style="color:#d9534f">✕</span><span>No optical size compensation — icons appeared different sizes</span></div>
+        <div class="compare-item"><span style="color:#d9534f">✕</span><span>Same icon used for Project and View Company</span></div>
+        <div class="compare-item"><span style="color:#d9534f">✕</span><span>Icons with different visual weights and out of context</span></div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-label after">After — Goals set</div>
+        <div class="compare-item"><span style="color:#27ae60">✓</span><span>Unified 1px stroke weight across the entire set</span></div>
+        <div class="compare-item"><span style="color:#27ae60">✓</span><span>No corner radius except when shape demands it</span></div>
+        <div class="compare-item"><span style="color:#27ae60">✓</span><span>24px base grid with 18px optical safe zone</span></div>
+        <div class="compare-item"><span style="color:#27ae60">✓</span><span>One metaphor per concept — clear, unambiguous meaning</span></div>
+        <div class="compare-item"><span style="color:#27ae60">✓</span><span>Rounded stroke caps & joins for a cohesive feel</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<div class="full-width-section">
+<section class="case-section case-sec" id="sec-checklist">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Design Checklist</div>
+    <h2 class="section-title">The rules behind every pixel</h2>
+    <div class="section-body">
+      <p>Before drawing a single icon, I defined a strict checklist that governed every design decision. This ensured consistency at scale and made the system teachable to other designers.</p>
+    </div>
+  </div>
+  <table class="checklist-table reveal">
+    <tr><td class="cl-label">Grid Size</td><td class="cl-value">24 x 24 px</td></tr>
+    <tr><td class="cl-label">Optical Size</td><td class="cl-value">18 x 18 px</td></tr>
+    <tr><td class="cl-label">Stroke Width</td><td class="cl-value">1 px</td></tr>
+    <tr><td class="cl-label">Element Size</td><td class="cl-value">In whole numbers, preferably even numbers</td></tr>
+    <tr><td class="cl-label">Stroke Alignment</td><td class="cl-value">Centrally aligned with the grid line</td></tr>
+    <tr><td class="cl-label">Gap b/w Elements</td><td class="cl-value">Minimum 1 px gap between elements</td></tr>
+    <tr><td class="cl-label">Shape Cut</td><td class="cl-value">1 px gap around elements</td></tr>
+    <tr><td class="cl-label">Corner Radius</td><td class="cl-value">No corner radius except if needed to define the shape</td></tr>
+    <tr><td class="cl-label">Corner Join, Stroke Cap</td><td class="cl-value">Rounded</td></tr>
+    <tr><td class="cl-label">Additional Elements</td><td class="cl-value">Bottom right of the main element</td></tr>
+  </table>
+</section>
+</div>
+
+<!-- PROCESS -->
+<section class="case-section case-sec" id="sec-process">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Process</div>
+    <h2 class="section-title">From audit to Figma component library</h2>
+    <div class="section-body">
+      <p>The project followed a clear four-phase approach, from cataloguing the existing mess to shipping a production-ready component library.</p>
+    </div>
+  </div>
+  <div class="process-timeline reveal">
+    <div class="process-step">
+      <div class="process-step-num">Phase 01</div>
+      <div class="process-step-title">Understanding & Audit</div>
+      <div class="process-step-desc">Analysed Solargraf's existing icon set to identify inconsistencies and usability issues. Gathered understanding on how users interact with icons and the context of use.</div>
+    </div>
+    <div class="process-step">
+      <div class="process-step-num">Phase 02</div>
+      <div class="process-step-title">Ideation & Exploration</div>
+      <div class="process-step-desc">Explored different variations for line icons to analyse elements visually. Explored filled versions, simplified where needed, ensured consistent proportions.</div>
+    </div>
+    <div class="process-step">
+      <div class="process-step-num">Phase 03</div>
+      <div class="process-step-title">Refinement & Testing</div>
+      <div class="process-step-desc">Tested icons at minimum and maximum sizes to ensure they communicate well. Ensured breathing space and avoided weird shape cuts.</div>
+    </div>
+    <div class="process-step">
+      <div class="process-step-num">Phase 04</div>
+      <div class="process-step-title">Library & Handoff</div>
+      <div class="process-step-desc">Built a Figma component library with search-friendly naming, size variants, and usage documentation. Exported optimized SVGs for engineering.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ICON SET -->
+<div class="full-width-section" style="background:var(--bg)">
+<section class="case-section case-sec" id="sec-icons" style="max-width:1200px">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> The Icon Set</div>
+    <h2 class="section-title">A glimpse of the redesigned icon set</h2>
+    <div class="section-body">
+      <p>40+ icons organized across 4 product areas. Each icon designed on a 24px grid with 18px optical safe zone, 1px stroke weight, and rounded joins — in both outline and filled variants.</p>
+    </div>
+  </div>
+  <div class="icon-showcase reveal">
+    <div class="icon-grid" id="iconGrid"></div>
+  </div>
+</section>
+</div>
+
+<!-- IMPACT -->
+<section class="case-section case-sec" id="sec-impact">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Impact</div>
+    <h2 class="section-title">A system, not just a set of icons</h2>
+    <div class="section-body">
+      <p>The redesigned icon system didn't just look better — it fundamentally changed how the team worked with icons. The consistent visual language improved the perceived quality of the entire product.</p>
+    </div>
+  </div>
+  <div class="cards-grid reveal" style="margin-top:48px;grid-template-columns:repeat(3,1fr)">
+    <div class="info-card" style="text-align:center">
+      <div class="info-card-num">40+</div>
+      <div class="info-card-title">Icons redesigned</div>
+      <div class="info-card-desc">Across 4 major product areas, covering every use case in the platform</div>
+    </div>
+    <div class="info-card" style="text-align:center">
+      <div class="info-card-num">1</div>
+      <div class="info-card-title">Source of truth</div>
+      <div class="info-card-desc">A single Figma library with searchable naming, size variants, and docs</div>
+    </div>
+    <div class="info-card" style="text-align:center">
+      <div class="info-card-num">10</div>
+      <div class="info-card-title">Rules defined</div>
+      <div class="info-card-desc">A complete checklist to maintain consistency for all future icon additions</div>
+    </div>
+  </div>
+
+  <div class="highlight-box reveal" style="margin-top:32px">
+    <strong>Key learnings:</strong> Testing and feedback loops were instrumental in identifying potential confusion. Maintaining a consistent design style contributes to a cohesive user experience. Simple, universally recognised metaphors performed better than overly creative designs. Creating a comprehensive style guide ensures future updates remain consistent.
+  </div>
+</section>
+
+<footer class="case-footer">
+  <p>Designed by <a href="somya-portfolio-v4.html">Somya</a> · Solargraf Icon Set · Enphase Energy · 2026</p>
+</footer>
+
+<script src="solargraf-icons-data.js"></script>
+<script>
+// Render icon grid
+(function() {
+  const grid = document.getElementById('iconGrid');
+  const countEl = document.getElementById('iconCount');
+  if (!grid || typeof SOLARGRAF_ICONS === 'undefined') return;
+  function renderIcons(filter) {
+    const q = (filter || '').toLowerCase();
+    const filtered = q ? SOLARGRAF_ICONS.filter(i => i.n.toLowerCase().includes(q)) : SOLARGRAF_ICONS;
+    grid.innerHTML = filtered.map(i =>
+      `<div class="icon-grid-item" data-name="${i.n.toLowerCase()}"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">${i.s}</svg><span>${i.n}</span></div>`
+    ).join('');
+    countEl.textContent = filtered.length + ' icon' + (filtered.length !== 1 ? 's' : '');
+  }
+  renderIcons();
+  window.filterIcons = function(val) { renderIcons(val); };
+})();
+</script>
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+const bar = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY / h * 100) + '%';
+});
+
+const sections = document.querySelectorAll('.case-sec');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) cur = s.getAttribute('id'); });
+  navLinks.forEach(a => { a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--accent)' : ''; });
+});
+</script>
+</body>
+</html>

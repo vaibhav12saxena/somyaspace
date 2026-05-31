@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enphase AI Assistant · Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+:root {
+  --bg: #0e0e0e;
+  --bg2: #161616;
+  --bg3: #1e1e1e;
+  --surface: #252525;
+  --surface2: #2e2e2e;
+  --text: #f0f0f0;
+  --text2: #a0a0a0;
+  --text3: #6a6a6a;
+  --yellow: #ffcc00;
+  --yellow2: #e0a800;
+  --yellow-dim: rgba(255,204,0,0.12);
+  --border: 1px solid rgba(255,255,255,0.08);
+  --border-yellow: 1px solid rgba(255,204,0,0.25);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: 'Inria Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--yellow); }
+
+/* ─── TOP NAV ─── */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 56px;
+  background: rgba(14,14,14,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: var(--border);
+  transition: var(--transition);
+}
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.back-link:hover { color: var(--yellow); }
+.back-link svg { transition: transform var(--transition); }
+.back-link:hover svg { transform: translateX(-3px); }
+
+.nav-sections {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  height: 100%;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.nav-sections::-webkit-scrollbar { display: none; }
+.nav-sec-link {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text3);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--transition);
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+.nav-sec-link:hover { color: var(--text); }
+.nav-sec-link.active { color: var(--yellow); }
+.nav-sec-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 16px; right: 16px;
+  height: 2px;
+  background: var(--yellow);
+  transform: scaleX(0);
+  transition: transform var(--transition);
+}
+.nav-sec-link.active::after { transform: scaleX(1); }
+
+/* ─── HERO ─── */
+.case-hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 96px 64px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.case-hero::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,204,0,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.case-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 24px;
+}
+.case-label-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--yellow);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.case-title {
+  font-size: clamp(40px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+.case-title span { color: var(--yellow); }
+.case-subtitle {
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: var(--text2);
+  max-width: 640px;
+  margin-bottom: 48px;
+  line-height: 1.7;
+}
+
+/* Meta pills */
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.meta-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 24px;
+  background: var(--bg2);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  min-width: 160px;
+}
+.meta-pill-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+.meta-pill-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text3);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: float 2s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ─── SECTIONS ─── */
+.case-section {
+  padding: 96px 64px;
+  position: relative;
+}
+.case-section:nth-child(even) { background: var(--bg2); }
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 16px;
+}
+.section-label-line {
+  width: 32px; height: 1px;
+  background: var(--yellow);
+}
+.section-title {
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 800;
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+.section-body {
+  max-width: 720px;
+  color: var(--text2);
+  font-size: 16px;
+  line-height: 1.8;
+}
+.section-body p + p { margin-top: 20px; }
+
+/* ─── CARDS GRID ─── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.info-card {
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+.info-card:hover::before { transform: scaleX(1); }
+.info-card:hover { border-color: rgba(255,204,0,0.2); transform: translateY(-2px); }
+.info-card-icon {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+.info-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+.info-card-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ─── STAT BLOCKS ─── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.stat-block {
+  text-align: center;
+  padding: 32px 20px;
+  background: var(--bg);
+  border: var(--border);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.stat-block:hover { border-color: rgba(255,204,0,0.3); }
+.stat-num {
+  font-size: clamp(32px, 3vw, 48px);
+  font-weight: 800;
+  color: var(--yellow);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-size: 14px;
+  color: var(--text2);
+}
+
+/* ─── HIGHLIGHT BOX ─── */
+.highlight-box {
+  background: var(--yellow-dim);
+  border-left: 3px solid var(--yellow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 24px 32px;
+  margin: 32px 0;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.highlight-box strong { color: var(--yellow); }
+
+/* ─── TIMELINE ─── */
+.process-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 48px;
+  position: relative;
+  padding-left: 32px;
+}
+.process-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--yellow), var(--surface2));
+}
+.process-step {
+  position: relative;
+  padding: 24px 0 24px 32px;
+  border-bottom: var(--border);
+}
+.process-step:last-child { border-bottom: none; }
+.process-step::before {
+  content: '';
+  position: absolute;
+  left: -33px; top: 30px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--yellow);
+  transition: var(--transition);
+}
+.process-step:hover::before { background: var(--yellow); }
+.process-step-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.process-step-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.process-step-desc {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ─── LIST ITEMS ─── */
+.insight-list {
+  list-style: none;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.insight-list li {
+  display: flex;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: var(--border);
+  transition: var(--transition);
+  align-items: flex-start;
+}
+.insight-list li:hover { border-color: rgba(255,204,0,0.2); }
+.insight-num {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--yellow);
+  flex-shrink: 0;
+  width: 36px;
+}
+.insight-content { flex: 1; }
+.insight-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.insight-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+/* ─── FOOTER ─── */
+.case-footer {
+  padding: 64px 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: var(--border);
+}
+.footer-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--yellow);
+  text-decoration: none;
+  transition: var(--transition);
+}
+.footer-back:hover { gap: 14px; }
+.footer-credit {
+  font-size: 13px;
+  color: var(--text3);
+}
+
+/* ─── SCENARIO CARDS ─── */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+.scenario-card {
+  background: var(--bg);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: var(--transition);
+}
+.scenario-card:hover { border-color: rgba(255,204,0,0.25); }
+.scenario-card-icon {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.scenario-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.scenario-card-body {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.scenario-card-body strong { color: var(--yellow); font-weight: 600; }
+.scenario-card-body ul {
+  margin: 10px 0;
+  padding-left: 18px;
+}
+.scenario-card-body ul li {
+  margin-bottom: 4px;
+}
+.scenario-outcome {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: var(--border);
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.scenario-outcome span { color: var(--yellow); font-weight: 700; }
+.sub-section-title {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 64px;
+  margin-bottom: 8px;
+}
+.sub-section-desc {
+  font-size: 15px;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+/* ─── CALL TOPICS GRID ─── */
+.call-topics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+.call-topic-col {
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+}
+.call-topic-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--yellow);
+  margin-bottom: 20px;
+}
+.call-topic-item {
+  padding: 12px 0;
+  border-bottom: var(--border);
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.call-topic-item:last-child { border-bottom: none; }
+
+/* ─── QUOTE CARDS ─── */
+.quote-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.quote-card {
+  background: var(--surface);
+  border: var(--border);
+  border-left: 3px solid var(--yellow);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: var(--transition);
+}
+.quote-card:hover { border-left-color: var(--yellow); border-color: rgba(255,204,0,0.2); }
+.quote-text {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.6;
+  font-style: italic;
+}
+.quote-opportunity {
+  font-size: 13px;
+  color: var(--yellow);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.quote-persona {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* ─── IMAGE PLACEHOLDERS ─── */
+.img-placeholder {
+  background: var(--surface);
+  border: 2px dashed rgba(255,204,0,0.25);
+  border-radius: var(--radius);
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  min-height: 280px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.img-placeholder:hover { border-color: var(--yellow); }
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(255,204,0,0.02) 10px,
+    rgba(255,204,0,0.02) 20px
+  );
+}
+.img-placeholder-icon {
+  font-size: 40px;
+  opacity: 0.6;
+}
+.img-placeholder-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: 0.05em;
+}
+.img-placeholder-desc {
+  font-size: 13px;
+  color: var(--text3);
+  max-width: 400px;
+  line-height: 1.5;
+}
+.img-placeholder.wide { min-height: 360px; }
+.img-placeholder.hero-img { min-height: 480px; }
+
+/* ─── INTERACTION STYLE CARDS ─── */
+.interaction-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.interaction-card {
+  background: var(--bg);
+  border: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.interaction-card:hover { border-color: rgba(255,204,0,0.25); transform: translateY(-2px); }
+.interaction-card-preview {
+  background: var(--surface);
+  border-bottom: var(--border);
+  padding: 24px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.interaction-card-body {
+  padding: 24px;
+}
+.interaction-card-tag {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 8px;
+}
+.interaction-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.interaction-card-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ─── GUIDELINES ─── */
+.guidelines-featured {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 32px;
+}
+.guideline-featured-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  background: var(--surface);
+  border: var(--border);
+  border-left: 3px solid var(--yellow);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.guideline-featured-card:hover { border-color: rgba(255,204,0,0.3); border-left-color: var(--yellow); }
+.guideline-featured-text {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+.guideline-featured-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  min-height: 200px;
+}
+.guideline-featured-img > img {
+  max-height: 360px;
+  object-fit: contain;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.guideline-img-labeled {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.guideline-img-labeled img {
+  max-height: none;
+  width: auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.guideline-img-caption {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  padding: 3px 8px;
+}
+.guidelines-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+.guideline-item {
+  background: var(--surface);
+  border: var(--border);
+  border-left: 3px solid var(--yellow);
+  border-radius: var(--radius-sm);
+  padding: 20px 22px;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.guideline-item:hover { border-color: rgba(255,204,0,0.3); border-left-color: var(--yellow); }
+.guideline-num {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--yellow);
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+  line-height: 1;
+}
+.guideline-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+.guideline-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+.guideline-applied {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: var(--border);
+  font-size: 12px;
+  color: var(--yellow);
+  font-weight: 600;
+}
+
+/* ─── BEFORE/AFTER ─── */
+.before-after-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+.ba-col {
+  border: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.ba-label {
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ba-label.before { background: rgba(255,80,80,0.1); color: #ff6666; }
+.ba-label.after { background: rgba(0,200,120,0.1); color: #00c878; }
+.ba-content {
+  padding: 24px;
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ─── ENHANCEMENT CARDS ─── */
+.enhancement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.enhancement-card {
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: var(--transition);
+}
+.enhancement-card:hover { border-color: rgba(255,204,0,0.25); }
+.enhancement-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.enhancement-label.data { background: rgba(0,180,216,0.15); color: #00b4d8; }
+.enhancement-label.ux { background: rgba(255,204,0,0.15); color: var(--yellow); }
+.enhancement-label.ai { background: rgba(0,200,120,0.15); color: #00c878; }
+.enhancement-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.enhancement-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+/* ─── TWO COL LAYOUT ─── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+  margin-top: 48px;
+}
+.two-col-text {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.8;
+}
+.two-col-text p + p { margin-top: 16px; }
+
+@media (max-width: 768px) {
+  .interaction-showcase { grid-template-columns: 1fr; }
+  .guideline-featured-card { grid-template-columns: 1fr; }
+  .guidelines-grid { grid-template-columns: repeat(2, 1fr); }
+  .before-after-row { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .enhancement-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── SCROLL PROGRESS ─── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--yellow), #ff6820);
+  z-index: 200;
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+/* ─── REVEAL ANIMATION ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .case-hero { padding: 96px 24px 64px; }
+  .case-section { padding: 64px 24px; }
+  .case-footer { padding: 48px 24px; flex-direction: column; gap: 24px; }
+  .top-bar { padding: 16px 24px; }
+  .meta-pill { min-width: 140px; padding: 12px 16px; }
+  .process-timeline { padding-left: 24px; }
+  .process-step::before { left: -25px; }
+  .call-topics { grid-template-columns: 1fr; }
+  .quote-grid { grid-template-columns: 1fr; }
+  .scenario-grid { grid-template-columns: 1fr; }
+  .guideline-featured-card { grid-template-columns: 1fr; }
+  .guideline-featured-text { padding: 20px; }
+  .guideline-featured-img { min-height: 160px; padding: 12px; }
+  .guidelines-grid { grid-template-columns: 1fr; }
+  .guidelines-grid .guideline-item { padding: 16px 18px; }
+  .interaction-showcase { grid-template-columns: 1fr; }
+  .enhancement-grid { grid-template-columns: 1fr; }
+  .before-after-row { flex-direction: column; }
+  .ba-col { min-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ─── TOP BAR ─── -->
+<div class="top-bar">
+  <a href="somya-portfolio-v4.html#work" class="back-link">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back
+  </a>
+  <nav class="nav-sections">
+    <button class="nav-sec-link active" onclick="scrollToSection(0)">Overview</button>
+    <button class="nav-sec-link" onclick="scrollToSection(1)">Problem</button>
+    <button class="nav-sec-link" onclick="scrollToSection(2)">Solution</button>
+    <button class="nav-sec-link" onclick="scrollToSection(3)">AI Guidelines</button>
+    <button class="nav-sec-link" onclick="scrollToSection(4)">Design</button>
+    <button class="nav-sec-link" onclick="scrollToSection(5)">Iterations</button>
+    <button class="nav-sec-link" onclick="scrollToSection(6)">Impact</button>
+  </nav>
+</div>
+
+<!-- ═══ HERO / OVERVIEW ═══ -->
+<section class="case-hero case-sec" id="sec-overview">
+  <div class="reveal">
+    <div class="case-label">
+      <div class="case-label-dot"></div>
+      Case Study
+    </div>
+    <h1 class="case-title">Enphase <span>AI Assistant</span></h1>
+    <p class="case-subtitle">An AI that answers at 2am and actually knows the answer. Embedded directly in the Enphase Homeowner App, Enlighten Manager, and the ITK app. Powered by Claude, Gemini, and 70+ specialized agents grounded in real-time Enlighten data.</p>
+
+    <div class="case-meta">
+      <div class="meta-pill">
+        <div class="meta-pill-label">Timeline</div>
+        <div class="meta-pill-value">Jul 2024 – Present</div>
+      </div>
+      <div class="meta-pill">
+        <div class="meta-pill-label">Role</div>
+        <div class="meta-pill-value">UX Owner</div>
+      </div>
+      <div class="meta-pill">
+        <div class="meta-pill-label">Team</div>
+        <div class="meta-pill-value">Design · Engineering · PM</div>
+      </div>
+      <div class="meta-pill">
+        <div class="meta-pill-label">Stakeholders</div>
+        <div class="meta-pill-value">Customer Support Teams · AI/ML Engineering Lead · PM Teams</div>
+      </div>
+      <div class="meta-pill">
+        <div class="meta-pill-label">Pilot</div>
+        <div class="meta-pill-value">50K initially, now 229K (homeowners + installers)</div>
+      </div>
+      <div class="meta-pill">
+        <div class="meta-pill-label">Status</div>
+        <div class="meta-pill-value">Live in production</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll to explore</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><polyline points="19 12 12 19 5 12"/></svg>
+  </div>
+</section>
+
+<!-- ═══ PROBLEM ═══ -->
+<section class="case-section case-sec" id="sec-problem">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Problem</div>
+    <h2 class="section-title">Customers were waiting for a human to answer basic questions</h2>
+    <div class="section-body">
+      <p>Enphase customers, homeowners and installers alike, were waiting for a human to answer basic questions about their solar system. Simple queries about energy control, installation diagnostics, or fleet analytics led to long call queues, outdated knowledge bases, and manual ticket triaging.</p>
+      <p>Support teams were overwhelmed and customers couldn't self-serve. The gap between what people needed to know and how fast they could get answers kept growing with every product update and new hardware release.</p>
+    </div>
+    <div class="reveal" style="margin-top:48px;background:var(--bg2);border:var(--border);border-radius:var(--radius);padding:40px 48px;overflow-x:auto">
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:6px">Data Snapshot</div>
+      <div style="font-size:22px;font-weight:800;margin-bottom:4px">Top 30% of Support Call Volume</div>
+      <div style="font-size:14px;color:var(--text3);margin-bottom:32px">Breakdown of the most repetitive queries and the automation opportunity</div>
+      <div style="display:flex;gap:48px;flex-wrap:wrap">
+        <!-- Homeowner column -->
+        <div style="flex:1;min-width:280px">
+          <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:3px;background:#ffcc00;display:inline-block"></span> Homeowner Calls</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">High bills / Low production</span><span style="color:var(--yellow);font-weight:700">28%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:28%;height:100%;background:linear-gradient(90deg,#ffcc00,#e0a800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Gateway not reporting</span><span style="color:var(--yellow);font-weight:700">22%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:22%;height:100%;background:linear-gradient(90deg,#ffcc00,#e0a800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Battery issues (charging / discharging)</span><span style="color:var(--yellow);font-weight:700">18%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:18%;height:100%;background:linear-gradient(90deg,#ffcc00,#e0a800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Login / Access control</span><span style="color:var(--yellow);font-weight:700">14%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:14%;height:100%;background:linear-gradient(90deg,#ffcc00,#e0a800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Error messages / Email alerts</span><span style="color:var(--yellow);font-weight:700">12%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:12%;height:100%;background:linear-gradient(90deg,#ffcc00,#e0a800);border-radius:4px"></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Installer column -->
+        <div style="flex:1;min-width:280px">
+          <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:3px;background:#ff6820;display:inline-block"></span> Installer Calls</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Micros not reporting / communicating</span><span style="color:#ff6820;font-weight:700">26%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:26%;height:100%;background:linear-gradient(90deg,#ff6820,#e04800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Post-commissioning checks</span><span style="color:#ff6820;font-weight:700">22%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:22%;height:100%;background:linear-gradient(90deg,#ff6820,#e04800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Gateway WiFi connection issues</span><span style="color:#ff6820;font-weight:700">20%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:20%;height:100%;background:linear-gradient(90deg,#ff6820,#e04800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Gateway replacement / provisioning</span><span style="color:#ff6820;font-weight:700">18%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:18%;height:100%;background:linear-gradient(90deg,#ff6820,#e04800);border-radius:4px"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--text2)">Gateway LEDs flashing red</span><span style="color:#ff6820;font-weight:700">10%</span></div>
+              <div style="height:8px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:10%;height:100%;background:linear-gradient(90deg,#ff6820,#e04800);border-radius:4px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:24px;padding-top:16px;border-top:var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div style="font-size:13px;color:var(--text3)">Source: 3,500 support calls analyzed across Q3–Q4 2023</div>
+        <div style="font-size:13px;color:var(--yellow);font-weight:700">About 60% of these are automatable via AI</div>
+      </div>
+    </div>
+
+    <div class="stats-row" style="margin-top:32px">
+      <div class="stat-block">
+        <div class="stat-num">7.1 min</div>
+        <div class="stat-label">Avg. wait time per call</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">22 min</div>
+        <div class="stat-label">Avg. time spent on call</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">60%</div>
+        <div class="stat-label">Queries automatable via AI</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <strong>Core challenge:</strong> How might we build an AI assistant, embedded directly into the products customers already use, that handles everything from energy control questions to installation diagnostics to fleet analytics, in plain language, instantly?
+    </div>
+
+    <h3 class="sub-section-title" style="margin-top:64px">Desk study</h3>
+    <p class="sub-section-desc">We studied customer support data over a given period to understand the major issues driving homeowner and installer calls. We listed the top 30% of cases to build solutions for the highest impact use cases.</p>
+
+    <div class="reveal" style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:var(--bg2);border:var(--border);border-radius:var(--radius);padding:24px 28px">
+        <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:16px;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#ffcc00;display:inline-block"></span> Top 30% Homeowner calls</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Site status check <span style="color:var(--yellow);font-weight:600">(11.90%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">High bills, system not producing, specific error messages</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Gateway connectivity <span style="color:var(--yellow);font-weight:600">(9.90%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Gateway not reporting, email alerts</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">IQ Battery issues <span style="color:var(--yellow);font-weight:600">(4.80%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Battery discharging, battery not charging</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">System access issues <span style="color:var(--yellow);font-weight:600">(3.30%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Login, add maintainer company, access control</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:var(--border);border-radius:var(--radius);padding:24px 28px">
+        <div style="font-size:13px;font-weight:700;color:#ff6820;margin-bottom:16px;display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:3px;background:#ff6820;display:inline-block"></span> Top 30% Installer calls</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Microinverter PLC issue <span style="color:#ff6820;font-weight:600">(8.27%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Micros not reporting, not communicating after replacement</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Site status check <span style="color:#ff6820;font-weight:600">(6.80%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Post-commissioning checks, need email confirmations</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Network / Wi-Fi <span style="color:#ff6820;font-weight:600">(4.90%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Issues connecting gateway to customer wifi</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Gateway replacement <span style="color:#ff6820;font-weight:600">(4.85%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Replacing old gateway with new one, provisioning microinverters</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text)">Stuck booting <span style="color:#ff6820;font-weight:600">(4.67%)</span></div>
+            <div style="font-size:13px;color:var(--text3);margin-top:2px">Gateway LEDs keep flashing red</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:var(--bg2);border:var(--border);border-radius:var(--radius);padding:20px 28px">
+        <div style="font-size:18px;font-weight:800;color:var(--text)">15-18% repeat calls</div>
+        <div style="font-size:13px;color:var(--text3);margin-top:4px">Asking for status updates on open cases</div>
+      </div>
+      <div style="background:var(--bg2);border:var(--border);border-radius:var(--radius);padding:20px 28px">
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">
+          Average wait time per call: <strong style="color:var(--yellow)">7.1 minutes</strong><br>
+          Average time spent on call: <strong style="color:var(--yellow)">22 minutes</strong><br>
+          Average chat sessions per week: <strong style="color:var(--yellow)">3,500</strong> (NA Region)
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-section-title" style="margin-top:64px">Discussion insights</h3>
+    <p class="sub-section-desc">Conversations with homeowners, installers, and support agents revealed clear patterns in frustration and opportunity.</p>
+
+    <div class="reveal" style="margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="background:#fdf5e6;border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:200px">
+        <div>
+          <div style="font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic">"I get scared when I see an error, especially when I don't know what it means."</div>
+          <div style="font-size:13px;color:#ff8f00;line-height:1.5;margin-top:12px">Opportunity: Reduce fear by simplifying alerts and offering assistance.</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#808080;text-transform:uppercase;letter-spacing:0.08em;margin-top:16px">Homeowner</div>
+      </div>
+      <div style="background:#fdf5e6;border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:200px">
+        <div>
+          <div style="font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic">"If there's a quick fix, I'm okay doing it myself, but I don't want to guess."</div>
+          <div style="font-size:13px;color:#ff8f00;line-height:1.5;margin-top:12px">Opportunity: Offer structured, step-by-step guided help with safety nets.</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#808080;text-transform:uppercase;letter-spacing:0.08em;margin-top:16px">Homeowner</div>
+      </div>
+      <div style="background:#fdf5e6;border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:200px">
+        <div>
+          <div style="font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic">"When I'm on-site, I don't have time to read long documents. I need quick answers."</div>
+          <div style="font-size:13px;color:#ff8f00;line-height:1.5;margin-top:12px">Opportunity: Provide concise, situation-based AI help.</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#808080;text-transform:uppercase;letter-spacing:0.08em;margin-top:16px">Installer</div>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="background:#fdf5e6;border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:200px">
+        <div>
+          <div style="font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic">"Most customers describe problems vaguely. A bot could guide better questions before they reach me."</div>
+          <div style="font-size:13px;color:#ff8f00;line-height:1.5;margin-top:12px">Opportunity: AI can pre-triage user problems by gathering structured information.</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#808080;text-transform:uppercase;letter-spacing:0.08em;margin-top:16px">CS Agent</div>
+      </div>
+      <div style="background:#fdf5e6;border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:200px">
+        <div>
+          <div style="font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic">"The first 5-10 minutes of every call is just me pulling up information. That could be automatic."</div>
+          <div style="font-size:13px;color:#ff8f00;line-height:1.5;margin-top:12px">Opportunity: AI should prefetch account and system information before the agent connects.</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#808080;text-transform:uppercase;letter-spacing:0.08em;margin-top:16px">CS Agent</div>
+      </div>
+      <div style="background:#fdf5e6;border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:200px">
+        <div>
+          <div style="font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic">"Lot of our calls are actually repeat calls, just to check on their open cases."</div>
+          <div style="font-size:13px;color:#ff8f00;line-height:1.5;margin-top:12px">Opportunity: Share status and latest comments on open cases. Let users comment on the same ticket.</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#808080;text-transform:uppercase;letter-spacing:0.08em;margin-top:16px">CS Agent</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SOLUTION ═══ -->
+<section class="case-section case-sec" id="sec-vision">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Solution</div>
+    <h2 class="section-title">One AI layer, three personas, four ingress points</h2>
+    <div class="section-body">
+      <p>One unified AI layer, powered by Claude, Gemini, and 70+ specialized agents, serves three distinct personas across four product surfaces. The AI adapts its tone, depth, and response format based on who's asking.</p>
+    </div>
+
+    <!-- Persona cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px">
+      <div style="background:var(--surface);border:1px solid rgba(255,204,0,0.2);border-radius:var(--radius);padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,204,0,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div style="font-size:14px;font-weight:700;color:var(--yellow)">Homeowner</div>
+        </div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px">Non-technical users who own solar + battery systems. They want to understand their energy data, manage costs, and troubleshoot without calling support.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.5">
+          <strong style="color:var(--yellow)">AI tone:</strong> Simple, empathetic, jargon-free<br>
+          <strong style="color:var(--yellow)">Context:</strong> System status, billing, energy usage
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(255,104,32,0.2);border-radius:var(--radius);padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,104,32,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff6820" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div style="font-size:14px;font-weight:700;color:#ff6820">Installer</div>
+        </div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px">Certified solar professionals who install, commission, and maintain Enphase systems. On-site, time-pressured, technically fluent. Need fast, precise answers.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.5">
+          <strong style="color:#ff6820">AI tone:</strong> Direct, technical, no-fluff<br>
+          <strong style="color:#ff6820">Context:</strong> Device telemetry, site config, diagnostics
+        </div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(0,180,216,0.2);border-radius:var(--radius);padding:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:36px;height:36px;border-radius:8px;background:rgba(0,180,216,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div style="font-size:14px;font-weight:700;color:#00b4d8">Support Agent</div>
+        </div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px">Internal CS reps handling inbound tickets. They need instant access to site data, troubleshooting paths, and knowledge base articles to resolve issues faster.</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.5">
+          <strong style="color:#00b4d8">AI tone:</strong> Structured, context-rich, actionable<br>
+          <strong style="color:#00b4d8">Context:</strong> Ticket history, fleet data, KB articles
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Ingress Points with App UI -->
+    <div class="reveal" style="margin-top:48px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:20px">4 Ingress Points</div>
+
+      <!-- Card 1: Homeowner App (Blue) -->
+      <div style="background:var(--bg2);border:1px solid rgba(0,180,216,0.2);border-radius:var(--radius);overflow:hidden;margin-bottom:20px">
+        <div style="display:flex;align-items:stretch">
+          <div style="flex:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:center;min-width:0">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:100px;padding:4px 14px 4px 8px;width:fit-content;margin-bottom:14px">
+              <span style="font-size:14px">🏠</span>
+              <span style="font-size:12px;font-weight:700;color:#00b4d8">Homeowner</span>
+            </div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:6px">Enphase Homeowner App</div>
+            <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px">Simple, empathetic language. Answers energy control questions, system monitoring, and billing in plain language. Guided troubleshooting that builds confidence in self-service.</div>
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#ff5050;margin-bottom:6px">Pain points</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">"My bill is high but I have solar. Is something broken?"</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> 30+ min hold time to reach support<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> No self-serve system health check<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Cryptic error messages cause anxiety<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Battery behavior during outages is confusing
+                </div>
+              </div>
+              <div style="flex:1;background:rgba(0,180,216,0.06);border:1px solid rgba(0,180,216,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#00b4d8;margin-bottom:6px">What they want</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">Instant, plain-language answers without calling support or decoding jargon.</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:#00b4d8;margin-right:4px">&#8226;</span> "Is my system working?" answered in seconds<br>
+                  <span style="color:#00b4d8;margin-right:4px">&#8226;</span> Step-by-step guidance without an electrician<br>
+                  <span style="color:#00b4d8;margin-right:4px">&#8226;</span> Confidence they're not losing money silently
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:0 0 340px;background:var(--bg3);border-left:1px solid rgba(0,180,216,0.12);padding:24px;display:flex;align-items:center;justify-content:center;gap:12px">
+            <img src="Images/enphase/homeowner-app.png" alt="Homeowner App UI" style="height:340px;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+            <img src="Images/enphase/homeowner-chat.png" alt="Homeowner AI Chat" style="height:340px;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Installer App (Orange) -->
+      <div style="background:var(--bg2);border:1px solid rgba(255,104,32,0.2);border-radius:var(--radius);overflow:hidden;margin-bottom:20px">
+        <div style="display:flex;align-items:stretch">
+          <div style="flex:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:center;min-width:0">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,104,32,0.08);border:1px solid rgba(255,104,32,0.2);border-radius:100px;padding:4px 14px 4px 8px;width:fit-content;margin-bottom:14px">
+              <span style="font-size:14px">🔧</span>
+              <span style="font-size:12px;font-weight:700;color:#ff6820">Installer</span>
+            </div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:6px">Installer App (ITK)</div>
+            <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px">Used during commissioning. Technical precision with installation diagnostics, configuration steps, compatibility checks, and site-specific data. Fast, no-fluff answers when time is money.</div>
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#ff5050;margin-bottom:6px">Pain points</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">"3 micros not reporting, gateway LED red. Wiring or provisioning?"</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> 15 to 20 min hold to reach installer support<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Each call burns 35 min, delays next job<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Can't tell hardware fault vs. provisioning issue<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Gateway steps differ by model, no quick ref
+                </div>
+              </div>
+              <div style="flex:1;background:rgba(255,104,32,0.06);border:1px solid rgba(255,104,32,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#ff6820;margin-bottom:6px">What they want</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">Direct, technical answers on-site. Just the fix so they can move to the next job.</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:#ff6820;margin-right:4px">&#8226;</span> Instant diagnostics from actual device data<br>
+                  <span style="color:#ff6820;margin-right:4px">&#8226;</span> Step-by-step commissioning for their setup<br>
+                  <span style="color:#ff6820;margin-right:4px">&#8226;</span> Resolve issues without calling support
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:0 0 340px;background:var(--bg3);border-left:1px solid rgba(255,104,32,0.12);padding:24px;display:flex;align-items:center;justify-content:center;gap:12px">
+            <img src="Images/enphase/installer-app-1.png" alt="Installer App UI" style="height:340px;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+            <img src="Images/enphase/installer-app-2.png" alt="Installer App Commissioning" style="height:340px;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Enlighten Manager (Yellow — CS Agent + Installer) -->
+      <div style="background:var(--bg2);border:1px solid rgba(255,204,0,0.2);border-radius:var(--radius);overflow:hidden;margin-bottom:20px">
+        <div style="display:flex;align-items:stretch">
+          <div style="flex:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:center;min-width:0">
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+              <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,204,0,0.08);border:1px solid rgba(255,204,0,0.2);border-radius:100px;padding:4px 14px 4px 8px">
+                <span style="font-size:14px">🎧</span>
+                <span style="font-size:12px;font-weight:700;color:var(--yellow)">Customer Support Agent</span>
+              </div>
+              <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,104,32,0.08);border:1px solid rgba(255,104,32,0.2);border-radius:100px;padding:4px 14px 4px 8px">
+                <span style="font-size:14px">🔧</span>
+                <span style="font-size:12px;font-weight:700;color:#ff6820">Installer</span>
+              </div>
+            </div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:6px">Enlighten Manager</div>
+            <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px">For fleet managers, O&M teams, and customer support agents. Fleet analytics, system health summaries, and context-rich insights grounded in real-time Enlighten data.</div>
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#ff5050;margin-bottom:6px">Pain points</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">400+ sites, 50+ daily alerts. Critical ones get buried in noise.</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> 4 to 5 screens per site just to check status<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> CS agents lack context, same issue explained twice<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Can't tell urgent vs. routine at a glance<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Always reactive, homeowner calls first
+                </div>
+              </div>
+              <div style="flex:1;background:rgba(255,204,0,0.06);border:1px solid rgba(255,204,0,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--yellow);margin-bottom:6px">What they want</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">One question, fleet-wide answers. What's down, what's urgent, what to do next.</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:var(--yellow);margin-right:4px">&#8226;</span> Instant site context before the call starts<br>
+                  <span style="color:var(--yellow);margin-right:4px">&#8226;</span> Alerts ranked by severity, not chronology<br>
+                  <span style="color:var(--yellow);margin-right:4px">&#8226;</span> Fleet health, tickets, and resolution in one place
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:0 0 480px;background:var(--bg3);border-left:1px solid rgba(255,204,0,0.12);padding:24px;display:flex;align-items:center;justify-content:center">
+            <img src="Images/enphase/enlighten-manager.png" alt="Enlighten Manager UI" style="width:100%;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Enphase Website (All Personas) -->
+      <div style="background:var(--bg2);border:var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="display:flex;align-items:stretch">
+          <div style="flex:1;padding:28px 32px;display:flex;flex-direction:column;justify-content:center;min-width:0">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:100px;padding:4px 14px 4px 8px;width:fit-content;margin-bottom:14px">
+              <span style="font-size:14px">🌐</span>
+              <span style="font-size:12px;font-weight:700;color:var(--text2)">All Personas</span>
+            </div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:6px">Enphase Website</div>
+            <div style="font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:16px">Entry point for homeowners, installers, or potential leads. The AI assistant lives on enphase.com, answering product questions, guiding purchase decisions, and routing users to the right resources.</div>
+            <div style="display:flex;gap:10px">
+              <div style="flex:1;background:rgba(255,80,80,0.06);border:1px solid rgba(255,80,80,0.12);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#ff5050;margin-bottom:6px">Pain points</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">"Which battery works with my system? How much will it cost?"</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Product info scattered across pages and PDFs<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> No easy way to compare or check compatibility<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Leads drop off because they can't find answers fast enough<br>
+                  <span style="color:#ff5050;margin-right:4px">&#8226;</span> Installers waste time navigating for spec sheets
+                </div>
+              </div>
+              <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:6px">What they want</div>
+                <div style="font-size:13px;color:var(--text2);line-height:1.5">Conversational product guidance with comparisons, pricing, and a direct path to Enphase.</div>
+                <div style="font-size:13px;color:var(--text3);line-height:1.5;margin-top:6px">
+                  <span style="color:var(--text2);margin-right:4px">&#8226;</span> "Which product is right for me?" answered instantly<br>
+                  <span style="color:var(--text2);margin-right:4px">&#8226;</span> Direct links to specs, pricing, installer finder<br>
+                  <span style="color:var(--text2);margin-right:4px">&#8226;</span> Guided path from curiosity to purchase
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:0 0 480px;background:var(--bg3);border-left:var(--border);padding:24px;display:flex;align-items:center;justify-content:center">
+            <img src="Images/enphase/enlighten-website.png" alt="Enphase Website with AI" style="width:100%;border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4)">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ AI DESIGN GUIDELINES ═══ -->
+<section class="case-section case-sec" id="sec-guidelines">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> AI Design Guidelines</div>
+    <h2 class="section-title">Grounding the experience in proven AI principles</h2>
+    <div class="section-body">
+      <p>Designing an AI assistant for something as technical as solar energy meant we couldn't wing it. I used Microsoft's 18 AI Design Guidelines as a framework to structure our design decisions, adapting each principle to Enphase's context of homeowners, installers, and support agents.</p>
+      <p>These guidelines helped me work through a real tension: the AI needed to feel smart and capable while being upfront about its limits. Here's how I mapped the most critical principles to our design:</p>
+    </div>
+
+    <h3 class="sub-section-title">Key principles applied</h3>
+    <p class="sub-section-desc">Out of 18 guidelines, these 7 shaped the most critical design decisions.</p>
+
+    <!-- Featured guidelines with UI examples (horizontal layout) -->
+    <div class="guidelines-featured reveal">
+
+      <div class="guideline-featured-card">
+        <div class="guideline-featured-text">
+          <div class="guideline-num">01</div>
+          <div class="guideline-title">Graceful escalation when AI can't help</div>
+          <div class="guideline-desc">Recognize when the assistant doesn't understand the user's ask or lacks the confidence to answer accurately.</div>
+          <div class="guideline-applied">Applied: When the assistant detects low confidence or repeated misunderstanding, it proactively suggests connecting with an Enphase support agent instead of guessing.</div>
+        </div>
+        <div class="guideline-featured-img">
+          <img src="Images/guideline-escalation.png" alt="AI escalation chat flow" />
+        </div>
+      </div>
+
+      <div class="guideline-featured-card">
+        <div class="guideline-featured-text">
+          <div class="guideline-num">02</div>
+          <div class="guideline-title">Transparent thinking and loading states</div>
+          <div class="guideline-desc">Show users what's happening in the system while the AI processes their request.</div>
+          <div class="guideline-applied">Applied: Multi-stage indicators ("Analyzing your image...", "Fetching system data...", "Preparing insights...") keep users informed instead of staring at a spinner. Each query type has its own sequence of thinking states tailored to what's actually happening behind the scenes.</div>
+        </div>
+        <div class="guideline-featured-img">
+          <div class="guideline-img-labeled">
+            <img src="Images/guideline-loading-steps.png" alt="Step-by-step thinking indicators" />
+            <span class="guideline-img-caption">AI thinking steps</span>
+          </div>
+          <div class="guideline-img-labeled">
+            <img src="Images/guideline-loading-progress.png" alt="Agent connection queue and handoff states" />
+            <span class="guideline-img-caption">Handoff loading states</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="guideline-featured-card">
+        <div class="guideline-featured-text">
+          <div class="guideline-num">03</div>
+          <div class="guideline-title">Context-aware preset menus</div>
+          <div class="guideline-desc">Surface relevant quick-action options based on the user's persona and current context, so they don't have to type from scratch.</div>
+          <div class="guideline-applied">Applied: Homeowners see prompts like "Why is my bill high?" and "Check battery status." Installers see "Run commissioning check" and "Gateway LED troubleshooting." Menus adapt to active alerts and recent activity.</div>
+        </div>
+        <div class="guideline-featured-img">
+          <img src="Images/guideline-preset-menu.png" alt="Context-aware preset menu with persona-specific quick actions" />
+          <img src="Images/guideline-preset-menu-2.png" alt="Mobile preset menu with contextual prompts" />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Compact guidelines (text-only, 2 columns) -->
+    <div class="guidelines-grid reveal" style="grid-template-columns:1fr 1fr">
+      <div class="guideline-item">
+        <div class="guideline-num">04</div>
+        <div class="guideline-title">Make clear what the system can do</div>
+        <div class="guideline-desc">Help the user understand what the AI is capable of during onboarding and throughout interactions.</div>
+        <div class="guideline-applied">Applied: The assistant takes context from where it's invoked. In the Homeowner App, it opens with energy-specific prompts. In ITK, it surfaces installer workflows. On the website, it asks who you are first, then tailors the experience.</div>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">06</div>
+        <div class="guideline-title">Equitable, persona-adaptive tone</div>
+        <div class="guideline-desc">Adapt language per persona without assumptions about technical literacy.</div>
+        <div class="guideline-applied">Applied: Tone and vocabulary adjust per persona (homeowner vs. installer) while keeping the same level of respect and clarity for both.</div>
+      </div>
+    </div>
+
+    <!-- Featured guidelines with UI examples (horizontal layout) -->
+    <div class="guidelines-featured reveal" style="margin-top:24px">
+      <div class="guideline-featured-card">
+        <div class="guideline-featured-text">
+          <div class="guideline-num">05</div>
+          <div class="guideline-title">Non-blocking AI responses</div>
+          <div class="guideline-desc">Let users continue using the app while the AI generates its response, so they're never stuck waiting.</div>
+          <div class="guideline-applied">Applied: The chat runs as an overlay. Users can navigate the app, check system data, or review alerts while the assistant works in the background.</div>
+        </div>
+        <div class="guideline-featured-img">
+          <img src="Images/guideline_05.png" alt="Non-blocking AI overlay on homeowner app" />
+        </div>
+      </div>
+
+      <div class="guideline-featured-card">
+        <div class="guideline-featured-text">
+          <div class="guideline-num">07</div>
+          <div class="guideline-title">Take feedback and give fallback contextual menu options</div>
+          <div class="guideline-desc">When the assistant can't fully resolve a query, offer contextual fallback options instead of a dead end, and always let users share feedback on the response quality.</div>
+          <div class="guideline-applied">Applied: Every response includes a feedback mechanism. When the assistant reaches its limits, it surfaces relevant menu options like contacting support, browsing help articles, or restarting the conversation, so users always have a next step.</div>
+        </div>
+        <div class="guideline-featured-img">
+          <img src="Images/guideline_07a.png" alt="Feedback and fallback menu options" />
+          <img src="Images/guideline_07b.png" alt="Contextual menu fallback options" />
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box reveal" style="margin-top:40px">
+      <strong>Why this mattered:</strong> With an AI assistant spanning homeowner apps, installer tools, support dashboards, and the public website, the number of use cases grew fast. A structured framework meant we weren't redesigning from scratch for every new context. These guidelines gave us a scalable foundation, consistent principles that held up across systems while still flexing for each persona and platform.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DESIGN IN ACTION ═══ -->
+<section class="case-section case-sec" id="sec-design">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Design in Action</div>
+
+    <h3 class="sub-section-title">Visual design principles</h3>
+    <p class="sub-section-desc">The assistant lives across multiple platforms, so the visual language had to feel native everywhere while still being recognizable as the AI assistant.</p>
+
+    <div style="display:flex;flex-direction:column;gap:20px;margin-top:40px">
+
+      <!-- Card 1: Yellow as the AI identity -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="padding:32px;display:flex;flex-direction:column;justify-content:center">
+          <div style="color:var(--yellow);font-size:22px;margin-bottom:8px">●</div>
+          <div style="font-size:18px;font-weight:700;margin-bottom:16px">Yellow as the AI identity</div>
+          <div style="font-size:14px;color:var(--text2);line-height:1.7">The yellow accent color is the consistent thread across every platform. Wherever users encounter the AI assistant, whether in the homeowner app, installer toolkit, or main website, <strong style="color:var(--yellow);font-weight:600">yellow signals "this is the AI."</strong> It creates instant recognition without needing a label.</div>
+        </div>
+        <div style="background:#1e1e1e;padding:32px;display:flex;flex-direction:column;gap:20px;align-items:center;justify-content:center">
+          <img src="Images/vd_brand1.png" alt="Yellow AI sun icon with Enphase Assistant label" style="max-width:265px;width:100%;border-radius:10px" />
+          <img src="Images/vd_brand2.png" alt="Notification card with yellow Enphase Assistant CTA" style="max-width:343px;width:100%;border-radius:10px" />
+        </div>
+      </div>
+
+      <!-- Card 2: Clickable text follows native app color -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="padding:32px;display:flex;flex-direction:column;justify-content:center">
+          <div style="font-size:18px;margin-bottom:8px">🎨</div>
+          <div style="font-size:18px;font-weight:700;margin-bottom:16px">Tappable text follows native app color</div>
+          <div style="font-size:14px;color:var(--text2);line-height:1.7">CTA buttons use the AI's yellow identity to stay visually consistent across every platform. But <strong style="color:var(--yellow);font-weight:600">clickable text inside the chat follows the native color of the host app</strong>, blue in the homeowner app, orange in installer tools, yellow on the website. Users have already built muscle memory for what looks tappable in each app. Overriding that with a new color would break learned affordances and force them to relearn interaction cues inside the assistant. The split keeps the AI recognizable while respecting each platform's existing visual language.</div>
+        </div>
+        <div style="background:#1e1e1e;padding:16px;display:flex;gap:12px;align-items:center;justify-content:center">
+          <img src="Images/vd_cta1.png" alt="Enlighten Manager with orange CTAs and AI assistant overlay" style="flex:1;min-width:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/vd_cta2.png" alt="Homeowner app with blue mic and CTAs" style="width:22%;flex-shrink:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+
+      <!-- Card 3: Icon swap on agent handoff -->
+      <div style="background:var(--bg);border:var(--border);border-radius:var(--radius);overflow:hidden">
+        <div style="padding:32px;padding-bottom:24px">
+          <div style="font-size:22px;margin-bottom:8px">🔄</div>
+          <div style="font-size:18px;font-weight:700;margin-bottom:16px">Icon swap on agent handoff</div>
+          <div style="font-size:14px;color:var(--text2);line-height:1.7">When the AI assistant transfers the conversation to a human support agent, two things change at once. <strong style="color:var(--yellow);font-weight:600">The assistant icon swaps to an agent icon, and the chat theme shifts from yellow to the native app color.</strong> This double signal, visual identity plus color environment, makes the transition unmistakable. Users don't need to read a system message to know they're now talking to a real person. The color shift leverages a principle from cognitive psychology: environmental context change signals a mode switch, reducing the chance of users treating agent responses as AI generated.</div>
+        </div>
+        <div style="background:#1e1e1e;padding:16px;display:flex;gap:10px;align-items:center;justify-content:center">
+          <img src="Images/vd_ho1.png" alt="AI assistant offers to connect to agent" style="width:8%;flex-shrink:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/vd_ho2.png" alt="Connecting to agent queue" style="width:8%;flex-shrink:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/vd_ho3.png" alt="Agent connected and chatting" style="width:8%;flex-shrink:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/vd_ho4.png" alt="Enlighten Manager showing agent handoff" style="flex:1;min-width:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/vd_ho5.png" alt="Enlighten Manager after agent handoff with icon swap" style="flex:1;min-width:0;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="section-title" style="margin-top:80px">Solving for ambiguous and complicated systems</h2>
+    <div class="section-body">
+      <p>The Enphase ecosystem is not a single product. It spans homeowner apps, installer tools, fleet management dashboards, support portals, and the public website. Each surface has different users, different data access, and different levels of technical complexity. A homeowner asking "why is my bill high?" and an installer debugging a gateway communication fault are fundamentally different problems, but both land in the same AI assistant.</p>
+     </div>
+
+    <h3 class="sub-section-title">How the assistant handles complexity</h3>
+    <p class="sub-section-desc">We mapped four foundational patterns to cover how the assistant operates across different levels of system complexity and user intent.</p>
+
+    <div class="scenario-grid">
+      <div class="scenario-card">
+        <div class="scenario-card-icon">{}</div>
+        <div class="scenario-card-title">Fetch and display via public APIs</div>
+        <div class="scenario-card-body">
+          The assistant taps into Enphase's publicly accessible APIs to <strong>pull and surface real-time data</strong> like system status, production and consumption metrics, device health, and EV charge control, directly inside the chat.
+        </div>
+        <div class="scenario-outcome"><span>Outcome:</span> Users get their system information instantly without navigating complex menus or dashboards.</div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+          <img src="Images/scenario-api-1.png" alt="AI assistant fetching system data via API" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/scenario-api-2.png" alt="AI assistant displaying API data in chat" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-card-icon">🖥</div>
+        <div class="scenario-card-title">Task automation on behalf of the user</div>
+        <div class="scenario-card-body">
+          For actions like <strong>restarting a device, re-triggering a data sync, or checking support case statuses</strong>, the assistant triggers backend workflows after user confirmation, rather than just telling them what to do.
+        </div>
+        <div class="scenario-outcome"><span>Outcome:</span> Fewer manual steps, faster resolution, less room for user error.</div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+          <img src="Images/scenario-task-1.png" alt="Task automation confirmation flow" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/scenario-task-2.png" alt="Backend workflow triggered by assistant" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/scenario-task-3.png" alt="Task completion confirmation" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-card-icon">🔒</div>
+        <div class="scenario-card-title">Restricted access and secure redirection</div>
+        <div class="scenario-card-body">
+          For sensitive actions like billing queries and warranty claims that <strong>require higher authentication or portal access</strong>, the assistant provides controlled guidance, presenting secure links and redirecting users safely to the right section.
+        </div>
+        <div class="scenario-outcome"><span>Outcome:</span> Data security maintained while still completing complex workflows end to end.</div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+          <img src="Images/scenario-restrict-1.png" alt="Restricted access with secure redirection" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/scenario-restrict-2.png" alt="Secure link redirection flow" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-card-icon">🪜</div>
+        <div class="scenario-card-title">Step-by-step guided troubleshooting</div>
+        <div class="scenario-card-body">
+          For multi-step tasks like troubleshooting communication failures or reconnecting to Wi-Fi, <strong>the assistant breaks the process into clear, sequential steps</strong> with the ability to ask for clarification or repeat any step.
+        </div>
+        <div class="scenario-outcome"><span>Outcome:</span> Users self-resolve issues without feeling overwhelmed by technical complexity.</div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+          <img src="Images/scenario-troubleshoot-1.png" alt="Step-by-step guided troubleshooting flow" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/scenario-troubleshoot-2.png" alt="Troubleshooting completion screen" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- ═══ DESIGN ITERATIONS ═══ -->
+<section class="case-section case-sec" id="sec-iterations">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Design Iterations</div>
+    <h2 class="section-title">Shipped, learned, iterated, repeat</h2>
+    <div class="section-body">
+      <p>The AI assistant wasn't designed once and shipped. It evolved through continuous iteration cycles, each informed by real user behaviour, beta metrics, and direct feedback from homeowners and installers in the pilot.</p>
+    </div>
+    <div class="process-timeline">
+      <div class="process-step">
+        <div class="process-step-num">Iteration 01</div>
+        <div class="process-step-title">Salesforce shell, if/else logic, website only</div>
+        <div class="process-step-desc">The first version launched in early 2024 as a pilot scoped to the Enphase website only. The backend ran on if/else branching logic rather than a true LLM, which made conversations feel rigid and IVR like. The UI followed the Salesforce design system because CS agents were already using a Salesforce chatbot to handle customer chats, and reusing it meant faster developer implementation. As we added features, the system's limitations became clear. Branching logic couldn't handle ambiguous queries, the Salesforce shell restricted layout flexibility, and the whole experience felt more like a decision tree than a conversation.</div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+          <img src="Images/iteration-v1-1.png" alt="V1 Salesforce chat UI with role selection" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/iteration-v1-2.png" alt="V1 troubleshooting flow with agent handoff" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">Iteration 02</div>
+        <div class="process-step-title">Built from scratch, scalable across platforms</div>
+        <div class="process-step-desc">The V1 limitations made it clear we needed a ground up rebuild. This version was designed to scale across the homeowner app, installer tools, Enlighten Manager, and the website. When launched from the homeowner or installer apps, the assistant automatically picks up the user's persona and system context. On the website, it asks. New features like conversation threads, chat and case history, and a fixed menu bar were introduced to help users navigate complex data without losing track of where they were. A lead capture flow was also built for guest visitors on the website, turning support interactions into new business opportunities.</div>
+        <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:16px">
+          <img src="Images/iteration-v2-1.png" alt="V2 cross-platform assistant UI" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/iteration-v2-2.png" alt="V2 conversation threads and lead capture" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/iteration-v2-3.png" alt="V2 multi-screen overview across platforms" style="height:320px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">Alpha Feedback</div>
+        <div class="process-step-title">Alpha feedback and friction fixes</div>
+        <div class="process-step-desc">The overall design direction and LLM response quality received decent feedback during alpha testing. But two specific friction points stood out.</div>
+
+        <div style="margin-top:24px">
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px">Preset menu wasn't discoverable</div>
+          <div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px">Users kept asking: "How do I see the menu options that were shown to me when I opened the interface? Should I exit the assistant every time and open a fresh chat to see those options?" The preset menu only appeared on first launch and disappeared once a conversation started. We moved it to a persistent, always accessible location.</div>
+          <div style="display:flex;gap:12px;justify-content:center;align-items:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-preset-before.png" alt="Preset menu only visible on first launch" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">Before</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-preset-after.png" alt="Preset menu hidden after conversation starts" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">Before</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-preset-after-1.png" alt="Persistent preset menu accessible anytime" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">After</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-preset-after-2.png" alt="Preset menu accessible mid-conversation" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">After</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:32px">
+          <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px">Feedback and utility actions hidden behind overflow</div>
+          <div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px">Actions like response feedback (thumbs up/down), read aloud, and copy were tucked behind a three dot overflow menu on each response. Usage was low. Since this was a new product launch and we needed feedback data to train and improve the models, burying the feedback controls was working against us. We surfaced them directly under every response.</div>
+          <div style="display:flex;gap:12px;justify-content:center;align-items:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-feedback-before.png" alt="Feedback hidden behind three dot menu" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">Before</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-feedback-after.png" alt="Feedback still hidden behind overflow" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">Before</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+              <img src="Images/alpha-preset-after-1.png" alt="Feedback actions surfaced under every response" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+              <span style="font-size:12px;color:var(--text2)">After</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">Beta Tracking</div>
+        <div class="process-step-title">Threads bar removed, new chat relocated</div>
+        <div class="process-step-desc">During beta tracking with 229K+ users, we noticed that the threads generated at the top of the interface were barely being used. Most users continued their conversations one after another in the same chat rather than starting new threads. The data confirmed this: fewer than 8% of sessions used the "New chat" button in the top bar, and thread switching accounted for less than 3% of all interactions. Users were in a hurry to resolve issues, not organize their chat history. The threads bar was taking up valuable screen real estate without adding proportional value. We removed it from the top and relocated the new chat action into the fixed menu bar at the bottom, freeing up vertical space for what mattered most: the conversation itself.</div>
+        <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+          <img src="Images/beta-threads-before.png" alt="Threads bar occupying top of screen" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+          <img src="Images/beta-threads-after.png" alt="Threads removed, new chat in menu bar" style="height:300px;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.3)" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ IMPACT ═══ -->
+<section class="case-section case-sec" id="sec-impact">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Impact</div>
+    <h2 class="section-title">What 229K beta users told us</h2>
+    <div class="section-body">
+      <p>The beta pilot gave us a direct line to real user sentiment at scale. With 229,293 total beta users and 25,398 actively interacting, the data painted a clear picture of what's working, what's not, and where to push next.</p>
+    </div>
+    <div class="reveal" style="display:grid;grid-template-columns:1fr auto;gap:24px;align-items:stretch">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="stat-block" style="margin:0">
+          <div class="stat-num">229.3K</div>
+          <div class="stat-label">Beta users</div>
+        </div>
+        <div class="stat-block" style="margin:0">
+          <div class="stat-num">95.3K</div>
+          <div class="stat-label">Messages exchanged</div>
+        </div>
+        <div class="stat-block" style="margin:0">
+          <div class="stat-num">49.8K</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-block" style="margin:0">
+          <div class="stat-num">3.8K</div>
+          <div class="stat-label">Likes received</div>
+        </div>
+      </div>
+      <div style="background:var(--bg);border:var(--border);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:280px">
+        <div style="font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--yellow);margin-bottom:4px">Sentiment</div>
+        <div style="font-size:16px;font-weight:800;margin-bottom:16px">Response Quality</div>
+        <svg viewBox="0 0 200 200" style="width:160px;height:160px">
+          <circle cx="100" cy="100" r="75" fill="none" stroke="#252525" stroke-width="22"/>
+          <circle cx="100" cy="100" r="75" fill="none" stroke="#ffcc00" stroke-width="22" stroke-dasharray="411.5 59.7" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+          <circle cx="100" cy="100" r="75" fill="none" stroke="#ff6666" stroke-width="22" stroke-dasharray="59.6 411.6" stroke-dashoffset="-411.5" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+          <text x="100" y="90" fill="#ffcc00" font-size="28" font-weight="800" text-anchor="middle" font-family="sans-serif">87.3%</text>
+          <text x="100" y="112" fill="#a0a0a0" font-size="11" text-anchor="middle" font-family="sans-serif">Like rate</text>
+        </svg>
+        <div style="display:flex;gap:24px;justify-content:center;margin-top:12px">
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#ffcc00;display:inline-block"></span><span style="font-size:12px;color:var(--text2)">3,806 Likes</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#ff6666;display:inline-block"></span><span style="font-size:12px;color:var(--text2)">552 Dislikes</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-section-title" style="margin-top:48px">User feedback in action</h3>
+    <p class="sub-section-desc">Every response included a feedback mechanism. Users could rate responses, flag inaccuracies, and surface gaps the AI missed. This loop shaped every post-beta design decision.</p>
+    <div class="reveal" style="margin-top:24px;display:flex;justify-content:center">
+      <img src="Images/user-feedback.png" alt="User feedback UI with like, dislike, and contextual actions" style="max-width:700px;width:100%;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.3)" />
+    </div>
+
+    <h3 class="sub-section-title" style="margin-top:48px">Live in production</h3>
+    <p class="sub-section-desc">The assistant is live across the Enphase ecosystem. Here's a walkthrough of the production implementation.</p>
+    <div class="reveal" style="margin-top:24px;display:flex;justify-content:center">
+      <a href="https://www.youtube.com/watch?v=fYhVvBtGu0M" target="_blank" rel="noopener" style="display:block;width:100%;max-width:800px;position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.3);text-decoration:none">
+        <img src="https://img.youtube.com/vi/fYhVvBtGu0M/maxresdefault.jpg" alt="Enphase AI Assistant Demo" style="width:100%;height:100%;object-fit:cover" />
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3)">
+          <div style="width:64px;height:64px;background:rgba(255,204,0,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5z" fill="#0e0e0e"/></svg>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="highlight-box" style="margin-top:48px">
+      <strong>Key UX insight:</strong> With an 87.35% like rate across 95K+ messages, the assistant was hitting the right tone. But 831 escalated chats revealed edge cases where AI confidence was high but accuracy was low, a pattern we kept improving over time.
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<div class="case-footer">
+  <a href="somya-portfolio-v4.html#work" class="footer-back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+    Back to all projects
+  </a>
+  <div class="footer-credit">Somya Burman · 2026</div>
+</div>
+
+<script>
+// ─── SCROLL PROGRESS BAR ───
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.getElementById('scrollProgress').style.width = progress + '%';
+});
+
+// ─── REVEAL ON SCROLL ───
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.08 });
+revealEls.forEach(el => revealObs.observe(el));
+
+// ─── NAV SECTION LINKS ACTIVE STATE ───
+const sections = document.querySelectorAll('.case-sec');
+const navLinks = document.querySelectorAll('.nav-sec-link');
+
+function scrollToSection(i) {
+  sections[i]?.scrollIntoView({ behavior: 'smooth' });
+}
+
+const secObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = Array.from(sections).indexOf(e.target);
+      navLinks.forEach((link, i) => link.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.2 });
+sections.forEach(s => secObs.observe(s));
+</script>
+
+</body>
+</html>
