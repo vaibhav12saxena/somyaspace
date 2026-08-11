@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Somya · UX Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Architects+Daughter&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Montserrat:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Ubuntu:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+:root {
+  --paper:  #ffffff;
+  --paper2: #fafafa;
+  --paper3: #f5f5f5;
+  --ink:  #2c2417;
+  --ink2: #6b5c45;
+  --ink-faint: rgba(44,36,23,0.10);
+  --border: 2px solid #2c2417;
+  --border-thin: 1.5px solid rgba(44,36,23,0.5);
+  --shadow: 3px 3px 0px rgba(44,36,23,0.25);
+  --shadow-lg: 5px 5px 0px rgba(44,36,23,0.2);
+  --shadow-hover: 6px 6px 0px rgba(44,36,23,0.3);
+
+  --lavender: #ff5fa0;
+  --lavender2: #e0006a;
+  --yellow: #ffcc00;
+  --yellow2: #e0a800;
+  --mint: #00c878;
+  --mint2: #009858;
+  --peach: #ff6820;
+  --peach2: #e04800;
+  --pink: #ffc2dd;
+  --pink2: #ff5fa0;
+  --sky: #00b4d8;
+
+  --grid-color: rgba(44,36,23,0.05);
+}
+
+body {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── MARKER HIGHLIGHTS ─── */
+.mark {
+  background-image: linear-gradient(180deg, transparent 45%, rgba(255,204,0,0.38) 45%, rgba(255,204,0,0.38) 85%, transparent 85%);
+  padding:0 3px;
+  border-radius:2px;
+  -webkit-box-decoration-break:clone;
+  box-decoration-break:clone;
+}
+.mark-pink {
+  background-image: linear-gradient(180deg, transparent 45%, rgba(255,95,160,0.3) 45%, rgba(255,95,160,0.3) 85%, transparent 85%);
+  padding:0 3px; border-radius:2px; -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
+.mark-mint {
+  background-image: linear-gradient(180deg, transparent 45%, rgba(0,200,120,0.28) 45%, rgba(0,200,120,0.28) 85%, transparent 85%);
+  padding:0 3px; border-radius:2px; -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
+.mark-peach {
+  background-image: linear-gradient(180deg, transparent 45%, rgba(255,104,32,0.28) 45%, rgba(255,104,32,0.28) 85%, transparent 85%);
+  padding:0 3px; border-radius:2px; -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
+.mark-sky {
+  background-image: linear-gradient(180deg, transparent 45%, rgba(0,180,216,0.28) 45%, rgba(0,180,216,0.28) 85%, transparent 85%);
+  padding:0 3px; border-radius:2px; -webkit-box-decoration-break:clone; box-decoration-break:clone;
+}
+
+/* ─── PAPER TEXTURE OVERLAY ─── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:9990;
+  pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.7;
+}
+
+/* ─── GRID PAPER BACKGROUND ─── */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(44,36,23,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(44,36,23,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ─── WOBBLY BORDER FILTER ─── */
+svg.wobble-defs { position:absolute; width:0; height:0; overflow:hidden; }
+.wobble { filter:url(#wobble); }
+
+/* ─── TAPE ACCENTS ─── */
+.tape {
+  position:absolute;
+  width:60px; height:22px;
+  background:rgba(255,204,0,0.55);
+  z-index:3;
+  transform:rotate(-8deg);
+  box-shadow:0 1px 2px rgba(0,0,0,0.08);
+  border-radius:1px;
+}
+.tape-pink { background:rgba(255,158,204,0.55); }
+.tape-mint { background:rgba(0,200,120,0.35); }
+.tape-sky  { background:rgba(0,180,216,0.35); }
+.tape-peach{ background:rgba(255,104,32,0.35); }
+
+/* ─── STICKER PIN ─── */
+.pin {
+  position:absolute;
+  width:14px; height:14px;
+  border-radius:50%;
+  background:var(--lavender);
+  border:2px solid rgba(255,255,255,0.8);
+  box-shadow:0 2px 4px rgba(0,0,0,0.15);
+  z-index:4;
+}
+
+a, button, [onclick], input, textarea, select, label, .wc, .play-card, .bc, .pill, .csoc, .cc-btn, .cc-dot, .jtab, .dchip, .mini-pol, .btn, .btn-send { cursor: none !important; }
+
+/* ─── CUSTOM CURSOR ─── */
+#cur {
+  position:fixed; z-index:9999;
+  pointer-events:none; top:0; left:0;
+  font-size:20px; line-height:1;
+  transform: translate(-4px,-20px) rotate(0deg) scaleX(-1);
+  transition: transform .2s cubic-bezier(.16,1,.3,1), font-size .2s;
+  user-select:none;
+}
+#cur.big {
+  font-size:28px;
+  transform: translate(-4px,-26px) rotate(-15deg) scaleX(-1);
+}
+
+
+/* ─── NAV ─── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 32px;
+  background:var(--paper);
+  border-bottom:2px solid var(--ink);
+}
+.nav-logo {
+  font-family:'Bricolage Grotesque',sans-serif; font-size:24px; font-weight:700;
+  display:flex; align-items:center; gap:8px;
+  text-decoration:none; color:var(--ink);
+}
+.nav-sun { display:inline-block; animation:spin 10s linear infinite; }
+@keyframes spin{ to{transform:rotate(360deg)} }
+.nav-links { display:flex; gap:6px; list-style:none; }
+.nav-links a {
+  font-family:'Ubuntu',sans-serif; font-size:13px;
+  color:var(--ink2); text-decoration:none;
+  padding:6px 16px;
+  border-radius:24px;
+  border:1.5px solid transparent;
+  transition:all .2s;
+}
+.nav-links a:hover {
+  background:var(--yellow);
+  color:var(--ink);
+  border-color:var(--ink);
+  transform:rotate(-1deg) scale(1.04);
+}
+
+/* ─── SECTION WRAPPER ─── */
+.page { max-width:1200px; margin:0 auto; padding:96px 32px; }
+
+/* ─── HERO / ABOUT ─── */
+#about {
+  min-height:100vh;
+  padding-top:70px;
+  position:relative;
+  background:var(--paper);
+  overflow:hidden;
+}
+.hero-wrap {
+  position:relative;
+  display:flex;
+  background:var(--paper);
+  max-width:1512px;
+  margin:0 auto;
+}
+
+/* Left: Mesh board area — single composite image */
+.hero-board-col {
+  position:relative;
+  width:620px;
+  flex-shrink:0;
+}
+.hero-board-col img.hero-board-img {
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+/* Right: Intro section */
+.hero-intro-col {
+  flex:1;
+  max-width:570px;
+  padding:68px 41px 64px 40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  gap:36px;
+}
+.hero-intro-heading {
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.hero-intro-heading .hi {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-size:24px;
+  font-weight:700;
+  color:#000;
+  line-height:normal;
+}
+.hero-intro-heading .tagline {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-size:36px;
+  font-weight:700;
+  color:#000;
+  line-height:normal;
+}
+.hero-intro-heading .current {
+  font-family:'Ubuntu', sans-serif;
+  font-size:20px;
+  font-weight:500;
+  color:#9d9d9d;
+  list-style-position:inside;
+  padding-left:0;
+}
+.hero-intro-heading .current li {
+  margin-left:30px;
+}
+.hero-intro-bio {
+  font-family:'Ubuntu', sans-serif;
+  font-size:20px;
+  font-style:italic;
+  font-weight:400;
+  color:#373737;
+  line-height:26px;
+  letter-spacing:0.4px;
+}
+.hero-intro-section-label {
+  font-family:'Bricolage Grotesque', sans-serif;
+  font-size:16px;
+  font-weight:600;
+  color:#000;
+  margin-bottom:24px;
+}
+.hero-intro-icons {
+  display:flex;
+  gap:24px;
+  align-items:center;
+}
+.hero-intro-icon-box {
+  width:44px; height:44px;
+  background:#fff;
+  border-radius:4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:4px;
+}
+.hero-intro-icon-box img {
+  max-width:36px; max-height:37px;
+  display:block;
+}
+.hero-intro-icon-box a {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%; height:100%;
+}
+
+/* Buttons */
+.btn {
+  padding:10px 22px; font-family:'Ubuntu',sans-serif; font-size:14px;
+  border:2px solid var(--ink); cursor:none;
+  border-radius:24px;
+  box-shadow: var(--shadow); transition:all .2s;
+  text-decoration:none; display:inline-block;
+}
+.btn:hover { transform:rotate(-2deg) scale(1.05); box-shadow: var(--shadow-hover); }
+.btn-fill { background:var(--ink); color:var(--paper); }
+.btn-fill:hover { background:var(--ink2); }
+.btn-ghost { background:var(--peach); color:var(--ink); }
+
+.doodle-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:32px; }
+.dchip {
+  padding:5px 14px;
+  border:1.5px solid var(--ink);
+  border-radius:20px;
+  font-family:'Ubuntu',sans-serif; font-size:12px;
+  background:var(--paper2); transition:all .2s;
+}
+.dchip:hover { transform:rotate(-2deg) scale(1.05); background:var(--yellow); }
+
+/* ─── SECTION DIVIDER ─── */
+.sec-divider {
+  border:none; border-top: var(--border);
+  position:relative; margin:0;
+}
+.sec-divider::after {
+  content: attr(data-label);
+  position:absolute; top:-13px; left:40px;
+  background:var(--paper); padding:0 10px;
+  font-family:'Ubuntu',sans-serif; font-size:11px;
+  letter-spacing:.15em; text-transform:uppercase; color:var(--ink2);
+}
+
+/* ─── SECTION HEADING ─── */
+.sec-head {
+  display:flex; align-items:baseline; gap:16px; margin-bottom:48px;
+}
+.sec-num { display:none; }
+.sec-title {
+  font-family:'Bricolage Grotesque',sans-serif; font-size:clamp(40px,5.5vw,56px);
+  font-weight:700; letter-spacing:-2px; line-height:1;
+}
+.sec-sub {
+  font-family:'Caveat',cursive; font-size:18px;
+  color:var(--ink2); margin-left:auto;
+  transform:rotate(-1deg);
+}
+
+/* ─── WORK SECTION ─── */
+#work { background:var(--paper); }
+
+.work-grid {
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:24px;
+}
+.wc {
+  border: 2px solid var(--ink);
+  background:var(--paper);
+  transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+  cursor:none; overflow:hidden;
+  position:relative;
+  border-radius:6px;
+}
+.wc:nth-child(odd) { transform:rotate(-0.5deg); }
+.wc:nth-child(even) { transform:rotate(0.4deg); }
+.wc:hover { z-index:2; transform:rotate(0deg) translateY(-4px) !important; box-shadow:0 8px 24px rgba(44,36,23,0.15); }
+.wc.span4 { grid-column:span 4; }
+.wc.span3 { grid-column:span 3; }
+.wc.span2 { grid-column:span 2; }
+.wc.span6 { grid-column:span 6; }
+
+/* colour band at top of each card */
+.wc-band {
+  height:8px;
+  background:var(--band-color,var(--lavender));
+  border-bottom: 1.5px solid rgba(44,36,23,0.2);
+}
+
+
+.wc-inner { padding:24px 24px 24px; height:100%; display:flex; flex-direction:column; }
+
+/* big project number */
+.wc-num-large { display:none; }
+
+.wc-tag {
+  display:inline-block;
+  background:var(--band-color,var(--lavender));
+  border:1.5px solid var(--ink);
+  padding:4px 12px;
+  font-family:'Caveat',cursive; font-size:14px; font-weight:600;
+  margin-bottom:12px;
+  border-radius:16px;
+  transform:rotate(-1deg);
+  align-self:flex-start;
+}
+.wc-title {
+  font-family:'Bricolage Grotesque',sans-serif; font-size:22px; font-weight:700;
+  margin-bottom:10px; line-height:1.2; max-width:90%;
+}
+.wc-desc { font-size:12.5px; color:var(--ink2); line-height:1.75; flex:1; margin-bottom:16px; }
+
+/* ruled stat area */
+.wc-stats-ruled {
+  border-top: var(--border-thin);
+  padding-top:0;
+  display:flex; gap:0;
+}
+.wstat {
+  flex:1; padding:12px 14px 10px;
+  border-right: var(--border-thin);
+}
+.wstat:last-child { border-right:none; }
+.wstat-num {
+  font-family:'Caveat',cursive; font-size:32px; font-weight:700; line-height:1;
+  color:var(--ink);
+}
+.wstat-lbl { font-size:10px; color:var(--ink2); margin-top:3px; line-height:1.4; font-family:'Ubuntu',sans-serif; }
+
+.wc-accent-line {
+  margin-top:auto;
+  height:4px; border-radius:0;
+  background:var(--band-color,var(--lavender));
+  opacity:.45;
+}
+
+
+/* ─── PLAYGROUND ─── */
+#playground {
+  background:var(--paper2);
+  border-top: var(--border);
+}
+
+.play-grid {
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:0;
+  border: var(--border);
+}
+.play-card {
+  border: var(--border);
+  margin:-1.25px;
+  background:var(--paper2);
+  transition: transform .15s, box-shadow .15s, background .15s;
+  cursor:none; overflow:hidden;
+  position:relative;
+}
+.play-card:hover { background:var(--paper3); z-index:2; transform:translate(-2px,-2px); box-shadow: var(--shadow-hover); }
+.play-card.span3 { grid-column:span 3; }
+.play-card.span4 { grid-column:span 4; }
+.play-card.span2 { grid-column:span 2; }
+
+/* ─── JOURNEY ROAD ─── */
+#journey {
+  background:var(--paper);
+  border-top: var(--border);
+}
+
+.journey-road {
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+}
+.journey-road img {
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* ─── BEYOND + CONTACT COMBINED ─── */
+#life {
+  background: var(--paper2);
+  border-top: var(--border);
+}
+
+.life-wrap {
+  display:flex;
+  justify-content:center;
+  min-height:500px;
+}
+
+/* Left: sketchbook */
+.life-left {
+  width:100%;
+  position:relative;
+  background:transparent;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:48px 32px;
+}
+
+/* Sketchbook container */
+.sketchbook {
+  position:relative;
+  display:flex;
+  width:100%;
+  max-width:800px;
+  aspect-ratio:4/3;
+  filter:drop-shadow(0 8px 28px rgba(0,0,0,0.12));
+}
+
+
+/* Left page (blank) */
+.sketch-left-page {
+  flex:1;
+  background:linear-gradient(to right, #f9f6f1, #fdfaf6);
+  border:1.5px solid rgba(44,36,23,0.12);
+  border-right:none;
+  border-radius:8px 0 0 8px;
+  position:relative;
+  overflow:hidden;
+}
+.sketch-left-page::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:repeating-linear-gradient(
+    to bottom,
+    transparent 0, transparent 27px,
+    rgba(44,36,23,0.04) 27px, rgba(44,36,23,0.04) 28px
+  );
+  pointer-events:none;
+}
+.sketch-left-label {
+  position:absolute;
+  bottom:24px; left:24px;
+  font-family:'Caveat',cursive;
+  font-size:18px;
+  color:rgba(44,36,23,0.18);
+  transform:rotate(-2deg);
+}
+
+/* Right page (artwork) — the flip container */
+.sketch-right-page {
+  flex:1;
+  background:linear-gradient(to left, #f9f6f1, #fdfaf6);
+  border:1.5px solid rgba(44,36,23,0.12);
+  border-left:none;
+  border-radius:0 8px 8px 0;
+  position:relative;
+  overflow:visible;
+  perspective:1800px;
+}
+
+/* Each flip leaf is a full-size wrapper with two faces */
+.sketch-leaf {
+  position:absolute;
+  inset:0;
+  transform-origin:left center;
+  transform-style:preserve-3d;
+  transition:transform 1.4s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  will-change:transform;
+  cursor:pointer;
+}
+.sketch-leaf.turning {
+  transform:rotateY(-180deg);
+}
+
+/* Front face (image) */
+.sketch-leaf-front,
+.sketch-leaf-back {
+  position:absolute; inset:0;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  border-radius:0 6px 6px 0;
+  overflow:hidden;
+}
+.sketch-leaf-front img {
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+}
+/* Subtle page edge shadow on front */
+.sketch-leaf-front::after {
+  content:'';
+  position:absolute;
+  right:0; top:0; bottom:0; width:20px;
+  background:linear-gradient(to left, rgba(0,0,0,0.04), transparent);
+  pointer-events:none;
+}
+
+/* Back face (paper texture shown during turn) */
+.sketch-leaf-back {
+  transform:rotateY(180deg);
+  background:#f5f0e8;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0, transparent 27px,
+      rgba(44,36,23,0.05) 27px, rgba(44,36,23,0.05) 28px
+    );
+}
+/* Gradient shadow on the back face spine edge */
+.sketch-leaf-back::after {
+  content:'';
+  position:absolute;
+  right:0; top:0; bottom:0; width:50px;
+  background:linear-gradient(to left, rgba(0,0,0,0.08) 0%, transparent 100%);
+  pointer-events:none;
+}
+
+/* Dynamic shadow under the turning page */
+.sketch-right-page::before {
+  content:'';
+  position:absolute;
+  left:0; top:0; bottom:0; width:0;
+  background:linear-gradient(to right, rgba(0,0,0,0.12), transparent);
+  z-index:25;
+  pointer-events:none;
+  transition:width 0.6s ease;
+}
+.sketch-right-page.has-turning::before {
+  width:40px;
+}
+
+/* Page counter */
+.sketch-counter {
+  position:absolute;
+  bottom:10px; right:14px;
+  font-family:'Caveat',cursive;
+  font-size:15px;
+  color:rgba(44,36,23,0.25);
+  z-index:26;
+}
+
+/* Right: contact */
+.life-right {
+  padding:32px 32px;
+  background:var(--paper);
+  border:1.5px solid rgba(44,36,23,0.15);
+  border-radius:12px;
+  display:flex; flex-direction:column;
+  position:relative;
+  overflow:hidden;
+}
+/* ruled lines */
+.life-right::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:repeating-linear-gradient(
+    to bottom,
+    transparent 0, transparent 31px,
+    rgba(26,20,16,.07) 31px, rgba(26,20,16,.07) 32px
+  );
+  background-size:100% 32px;
+  pointer-events:none;
+}
+/* red margin line */
+.life-right::after {
+  content:'';
+  position:absolute; top:0; bottom:0; left:52px;
+  width:2px; background:rgba(200,80,80,.4);
+  pointer-events:none;
+}
+
+.life-right-content { position:relative; z-index:1; padding-left:24px; }
+
+.contact-stamp {
+  display:inline-block; background:var(--peach);
+  border:1.5px solid var(--ink);
+  padding:6px 16px; font-family:'Caveat',cursive; font-size:16px; font-weight:600;
+  border-radius:4px;
+  box-shadow: var(--shadow); transform:rotate(-2deg);
+  margin-bottom:24px;
+}
+.contact-heading {
+  font-family:'Bricolage Grotesque',sans-serif; font-size:clamp(32px,4vw,52px);
+  font-weight:700; letter-spacing:-1.5px; line-height:1.05;
+  margin-bottom:8px;
+}
+.contact-sub {
+  font-family:'Ubuntu',sans-serif; font-size:13px; color:var(--ink2);
+  margin-bottom:28px; line-height:1.7;
+}
+
+.cf { display:flex; flex-direction:column; gap:10px; margin-bottom:12px; }
+.ci, .ct {
+  background:var(--paper);
+  border:1.5px solid var(--ink);
+  border-radius:8px;
+  padding:11px 14px;
+  font-family:'Ubuntu',sans-serif; font-size:14px;
+  color:var(--ink); outline:none; width:100%;
+  transition:background .2s, box-shadow .2s;
+}
+.ci:focus, .ct:focus {
+  background:var(--paper2);
+  box-shadow:inset 1px 1px 0 rgba(0,0,0,.05), 0 0 0 2px #00c878;
+}
+.ci::placeholder, .ct::placeholder { color:#aaa; }
+.ct { height:100px; resize:none; }
+
+.btn-send {
+  padding:12px 28px;
+  border:2px solid var(--ink);
+  border-radius:24px;
+  background:var(--ink); color:var(--paper);
+  font-family:'Ubuntu',sans-serif; font-size:14px;
+  cursor:none; box-shadow: var(--shadow);
+  transition:all .2s; align-self:flex-start;
+}
+.btn-send:hover { transform:rotate(-2deg) scale(1.05); box-shadow: var(--shadow-hover); }
+.btn-send.sent { background:#00c878; color:#fff; }
+
+.contact-socials { display:flex; gap:8px; margin-top:24px; }
+.csoc {
+  width:38px; height:38px;
+  border:1.5px solid var(--ink);
+  border-radius:50%;
+  background:var(--paper2); display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:var(--ink); text-decoration:none; cursor:none;
+  transition:all .2s;
+  font-family:'Ubuntu',sans-serif; font-weight:700;
+}
+.csoc:hover { transform:rotate(-8deg) scale(1.1); background:var(--yellow); }
+
+/* doodle note at bottom */
+.doodle-note {
+  font-family:'Caveat',cursive; font-size:17px; color:#aaa;
+  margin-top:auto; padding-top:20px;
+  position:relative; z-index:1;
+  transform:rotate(-0.5deg);
+}
+.doodle-note::before { content:'✏️ '; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top:2px solid var(--ink);
+  background:var(--ink); color:var(--paper);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 32px;
+}
+.ft-left { font-family:'Caveat',cursive; font-size:22px; font-weight:700; display:flex; align-items:center; gap:10px; }
+.ft-right { font-family:'Caveat',cursive; font-size:14px; color:#999; }
+
+/* ─── REVEAL ─── */
+.reveal { opacity:0; transform:translateY(24px); transition:opacity .65s ease, transform .65s cubic-bezier(.16,1,.3,1); }
+.reveal.vis { opacity:1; transform:translateY(0); }
+.rd1{transition-delay:.07s} .rd2{transition-delay:.14s} .rd3{transition-delay:.21s} .rd4{transition-delay:.28s}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1512px){
+  .hero-board-col { width:60%; flex-shrink:1; }
+  .hero-intro-col { padding:68px 20px 48px 32px; max-width:none; }
+}
+@media(max-width:960px){
+  .hero-wrap { flex-direction:column; align-items:center; }
+  .hero-board-col { width:100%; }
+  .hero-intro-col { padding:48px 20px; max-width:none; }
+  .hero-intro-heading .tagline { font-size:28px; }
+  .hero-intro-bio { font-size:16px; }
+  .work-grid { grid-template-columns:1fr; gap:16px; }
+  .wc,.wc.span4,.wc.span3,.wc.span2,.wc.span6 { grid-column:span 1; }
+  .wc:nth-child(odd), .wc:nth-child(even) { transform:rotate(0deg); }
+  .play-grid { grid-template-columns:1fr; }
+  .play-card,.play-card.span3,.play-card.span4,.play-card.span2 { grid-column:span 1; }
+  .journey-road { padding:0; }
+  .life-left { padding:32px 20px; }
+  .sketchbook { max-width:480px; }
+  nav { padding:14px 20px; }
+  .nav-links a { padding:6px 10px; font-size:12px; }
+  .page { padding-left:20px; padding-right:20px; }
+  .tape { display:none; }
+}
+</style>
+</head>
+<body>
+<svg class="wobble-defs" xmlns="http://www.w3.org/2000/svg">
+  <filter id="wobble">
+    <feTurbulence type="turbulence" baseFrequency="0.012" numOctaves="3" result="noise" seed="2"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<div id="cur">✏️</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#about" class="nav-logo"><span class="nav-sun"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="13" cy="4" rx="2.5" ry="4.5" fill="#ffcc00"/><ellipse cx="13" cy="22" rx="2.5" ry="4.5" fill="#ffcc00"/><ellipse cx="4" cy="13" rx="4.5" ry="2.5" fill="#ffcc00"/><ellipse cx="22" cy="13" rx="4.5" ry="2.5" fill="#ffcc00"/><ellipse cx="6.8" cy="6.8" rx="2.5" ry="4.5" transform="rotate(-45 6.8 6.8)" fill="#ffcc00"/><ellipse cx="19.2" cy="19.2" rx="2.5" ry="4.5" transform="rotate(-45 19.2 19.2)" fill="#ffcc00"/><ellipse cx="19.2" cy="6.8" rx="2.5" ry="4.5" transform="rotate(45 19.2 6.8)" fill="#ffcc00"/><ellipse cx="6.8" cy="19.2" rx="2.5" ry="4.5" transform="rotate(45 6.8 19.2)" fill="#ffcc00"/><circle cx="13" cy="13" r="6" fill="#1a1208"/><circle cx="13" cy="13" r="3.8" fill="#4a3a18"/></svg></span> somya's space.</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#life">Life & Connect</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ ABOUT / HERO ═══ -->
+<section id="about">
+  <div class="hero-wrap">
+
+    <!-- ══ LEFT: MESH BOARD (composite image from Figma) ══ -->
+    <div class="hero-board-col">
+      <img class="hero-board-img" src="Images/hero/hero-board-composite.png" alt="Somya's desk mesh board with photos, notes, and illustrations">
+    </div>
+
+    <!-- ══ RIGHT: INTRO SECTION ══ -->
+    <div class="hero-intro-col">
+
+      <div class="hero-intro-heading">
+        <p class="hi">Hi, I'm Somya</p>
+        <p class="tagline">Designing scalable systems for complex products.</p>
+        <ul class="current">
+          <li>currently @Enphase Energy</li>
+        </ul>
+      </div>
+
+      <p class="hero-intro-bio">I am an engineer turned designer. Once immersed in the field of engineering, I discovered a passion for the art that shapes user experiences. Today, I proudly wear the hat of a product designer, where I blend the analytical mindset of an engineer with the creative flair I've cherished since my childhood days.</p>
+
+      <div>
+        <div>
+          <p class="hero-intro-section-label">Current tech stack</p>
+          <div class="hero-intro-icons">
+            <div class="hero-intro-icon-box">
+              <a href="https://www.figma.com" target="_blank">
+                <img src="Images/hero/icon-figma.png" alt="Figma">
+              </a>
+            </div>
+            <div class="hero-intro-icon-box">
+              <a href="https://www.anthropic.com/claude" target="_blank">
+                <img src="Images/hero/icon-claude.png" alt="Claude">
+              </a>
+            </div>
+            <div class="hero-intro-icon-box">
+              <a href="https://devin.ai" target="_blank">
+                <img src="Images/hero/icon-devin.png" alt="Devin">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div>
+          <p class="hero-intro-section-label">Links</p>
+          <div class="hero-intro-icons">
+            <div class="hero-intro-icon-box">
+              <a href="https://www.linkedin.com/in/somyaburman/" target="_blank">
+                <img src="Images/hero/icon-linkedin.png" alt="LinkedIn">
+              </a>
+            </div>
+            <div class="hero-intro-icon-box">
+              <a href="mailto:somya_b@design.iitr.ac.in">
+                <img src="Images/hero/icon-gmail.png" alt="Email">
+              </a>
+            </div>
+            <div class="hero-intro-icon-box">
+              <a href="resume.html" target="_blank">
+                <img src="Images/hero/icon-resume.png" alt="Resume">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ WORK ═══ -->
+<section id="work">
+  <div class="page">
+    <div class="sec-head reveal">
+      <h2 class="sec-title">Work</h2>
+      <span class="sec-sub">a few favourites from my time at Enphase and beyond</span>
+    </div>
+
+    <!-- ── Category 1: Work Projects ── -->
+    <h3 class="sec-title reveal" style="font-size:clamp(18px,2vw,24px);margin-bottom:24px;font-family:'Caveat',cursive;color:var(--ink2)">Projects I shaped at Enphase</h3>
+    <div class="work-grid reveal">
+
+      <a href="enphase-ai-assistant.html" target="_blank" class="wc span4" style="--band-color:#ff5fa0;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape tape-pink" style="top:-6px;right:30px;transform:rotate(5deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">Gen-AI · Conversational Design</span>
+          <div class="wc-title">Enphase AI Assistant</div>
+          <div class="wc-desc">An AI assistant embedded in <span class="mark-pink">3 Enphase apps</span>, powered by Claude, Gemini & <span class="mark-pink">70+ specialized agents</span>. Beta released to 50K initially, now expanded to 229K homeowners and installers.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">95.3K</div><div class="wstat-lbl">Messages in beta</div></div>
+            <div class="wstat"><div class="wstat-num">87.35%</div><div class="wstat-lbl">Like rate</div></div>
+            <div class="wstat"><div class="wstat-num">&lt;1%</div><div class="wstat-lbl">Escalated to human</div></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="solaris-design-system.html" target="_blank" class="wc span2" style="--band-color:#ffcc00;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape" style="top:-6px;left:20px;transform:rotate(-4deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">Design Systems</span>
+          <div class="wc-title">Solaris 2.0 Design System + Playbook</div>
+          <div class="wc-desc">Design system for Solargraf. Components, tokens, icons — the works. Made the product feel like <span class="mark">one thing instead of many</span>.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">10+</div><div class="wstat-lbl">Components built</div></div>
+            <div class="wstat"><div class="wstat-num">~30%</div><div class="wstat-lbl">faster design handoff (estimated)</div></div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ── Category 2: AI + Design Engineering ── -->
+    <h3 class="sec-title reveal" style="font-size:clamp(18px,2vw,24px);margin:48px 0 24px;font-family:'Caveat',cursive;color:var(--ink2)">Tools I built with AI</h3>
+    <div class="work-grid reveal">
+
+      <a href="dark-mode-generator.html" target="_blank" class="wc span3" style="--band-color:#7871de;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape tape-mint" style="top:-6px;right:24px;transform:rotate(3deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">AI Tool · Figma Plugin</span>
+          <div class="wc-title">Dark Mode Generator</div>
+          <div class="wc-desc">AI-assisted Figma plugin for <span class="mark">automated light-to-dark theme transformations</span> using semantic color interpretation and token-aware mappings.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">🛠</div><div class="wstat-lbl">Windsurf + Figma</div></div>
+            <div class="wstat"><div class="wstat-num">🤖</div><div class="wstat-lbl">Prompt Engineering</div></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="spec-redline-generator.html" target="_blank" class="wc span3" style="--band-color:#00c878;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape tape-sky" style="top:-6px;left:16px;transform:rotate(-6deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">AI Tool · Developer Handoff</span>
+          <div class="wc-title">Spec & Redline Generator</div>
+          <div class="wc-desc">AI-assisted annotation and developer handoff tool that automatically generates <span class="mark-mint">spacing specs, layout redlines, and interface annotations</span> from selected Figma frames.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">🛠</div><div class="wstat-lbl">Windsurf + Figma</div></div>
+            <div class="wstat"><div class="wstat-num">🤖</div><div class="wstat-lbl">Prompt Engineering</div></div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ── Category 3: Playground ── -->
+    <h3 class="sec-title reveal" style="font-size:clamp(18px,2vw,24px);margin:48px 0 24px;font-family:'Caveat',cursive;color:var(--ink2)">Side projects I keep coming back to</h3>
+    <div class="work-grid reveal">
+
+      <a href="ar-troubleshooting-guide.html" target="_blank" class="wc span3" style="--band-color:#00b4d8;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape tape-peach" style="top:-6px;right:20px;transform:rotate(4deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">AR/XR · M.Des Thesis</span>
+          <div class="wc-title">Self-Troubleshooting AR Guide for Enphase</div>
+          <div class="wc-desc">My M.Des thesis. An AR guide that lets Enphase homeowners <span class="mark-sky">troubleshoot their own systems</span>. Ennovate'23 Honourable Mention.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">50.4K+</div><div class="wstat-lbl">Support calls reduced in 365 days</div></div>
+            <div class="wstat"><div class="wstat-num">25.2K+</div><div class="wstat-lbl">CS hours saved</div></div>
+            <div class="wstat"><div class="wstat-num">15.1K+</div><div class="wstat-lbl">Homeowners empowered</div></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="https://www.figma.com/proto/fi5xYJU2RFkMJr4xUvgbGs/Untitled?node-id=7-1314&t=Mx7BiVhRp95lEK72-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=7%3A1314" target="_blank" class="wc span3" style="--band-color:#ffcc00;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape" style="top:-6px;left:28px;transform:rotate(-3deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">Data as Art · Illustration</span>
+          <div class="wc-title">India Runs on Chai</div>
+          <div class="wc-desc">A personal project about chai and the people who drink it. <span class="mark">Data visualisation meets folk illustration</span>. Turns out 49% of people drink it just for comfort, which tracks.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">3</div><div class="wstat-lbl">Chai personas mapped</div></div>
+            <div class="wstat"><div class="wstat-num">☕</div><div class="wstat-lbl">Personal project</div></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="solargraf-icon-set.html" target="_blank" class="wc span3" style="--band-color:#c8197b;text-decoration:none;color:inherit;cursor:pointer">
+        <div class="tape tape-pink" style="top:-6px;right:18px;transform:rotate(7deg)"></div>
+        <div class="wc-band"></div>
+        <div class="wc-inner">
+
+          <span class="wc-tag">Iconography · Visual Systems</span>
+          <div class="wc-title">Solargraf Icon Set</div>
+          <div class="wc-desc">Redesigned the entire iconography system for Solargraf (Enphase). <span class="mark-pink">40+ icons, one grid, zero inconsistencies</span>. From audit to component library in 3 months.</div>
+          <div class="wc-stats-ruled">
+            <div class="wstat"><div class="wstat-num">40+</div><div class="wstat-lbl">Icons redesigned</div></div>
+            <div class="wstat"><div class="wstat-num">4</div><div class="wstat-lbl">Categories</div></div>
+            <div class="wstat"><div class="wstat-num">3 mo</div><div class="wstat-lbl">Timeline</div></div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ JOURNEY ═══ -->
+<section id="journey">
+  <div class="page">
+    <div class="sec-head reveal">
+      <h2 class="sec-title">Journey</h2>
+      <span class="sec-sub">the path that brought me here</span>
+    </div>
+
+    <div class="journey-road reveal">
+      <img src="Images/journey-road.png" alt="Journey timeline showing career path: BTech Computer Science at RGPV Bhopal (2014-2018), Senior Software Engineer at Capgemini (2018-2020), Visual Storyteller at CyberTapri (2020-2021), M.Des Product Design at IIT Roorkee (2021-2023), Sr. UX Designer at Enphase Energy (2023-present), MA Psychology at IGNOU (2025-ongoing)">
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LIFE & CONNECT (Beyond 9-5 + Contact merged) ═══ -->
+<section id="life">
+  <div class="page">
+    <div class="sec-head reveal">
+      <h2 class="sec-title">Life beyond 9 to 5</h2>
+    </div>
+
+    <div class="life-wrap reveal">
+
+      <!-- LEFT: Sketchbook -->
+      <div class="life-left">
+        <div class="sketchbook" id="sketchbook">
+          <!-- Left blank page -->
+          <div class="sketch-left-page">
+            <span class="sketch-left-label">sketchbook</span>
+          </div>
+          <!-- Right page with artwork -->
+          <div class="sketch-right-page" id="sketchRight">
+            <div class="sketch-leaf" style="z-index:11">
+              <div class="sketch-leaf-front"><img src="Images/carousel image 1.jpeg" alt="Artwork 1"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:10">
+              <div class="sketch-leaf-front"><img src="Images/carousel image 2.jpeg" alt="Artwork 2"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:9">
+              <div class="sketch-leaf-front"><img src="Images/carousel image 3.jpeg" alt="Artwork 3"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:8">
+              <div class="sketch-leaf-front"><img src="Images/carousel image 4.jpeg" alt="Artwork 4"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:7">
+              <div class="sketch-leaf-front"><img src="Images/carousel image 5.jpeg" alt="Artwork 5"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:6">
+              <div class="sketch-leaf-front"><img src="Images/sketch_6.png" alt="Artwork 6"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:5">
+              <div class="sketch-leaf-front"><img src="Images/sketch_7.png" alt="Artwork 7"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:4">
+              <div class="sketch-leaf-front"><img src="Images/sketch_8.png" alt="Artwork 8"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:3">
+              <div class="sketch-leaf-front"><img src="Images/sketch_9.png" alt="Artwork 9"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:2">
+              <div class="sketch-leaf-front"><img src="Images/sketch_10.png" alt="Artwork 10"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <div class="sketch-leaf" style="z-index:1">
+              <div class="sketch-leaf-front"><img src="Images/sketch_11.png" alt="Artwork 11"></div>
+              <div class="sketch-leaf-back"></div>
+            </div>
+            <span class="sketch-counter" id="sketchCounter">1 / 11</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-left"><span style="animation:spin 10s linear infinite;display:inline-block"><svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="13" cy="4" rx="2.5" ry="4.5" fill="#ffcc00"/><ellipse cx="13" cy="22" rx="2.5" ry="4.5" fill="#ffcc00"/><ellipse cx="4" cy="13" rx="4.5" ry="2.5" fill="#ffcc00"/><ellipse cx="22" cy="13" rx="4.5" ry="2.5" fill="#ffcc00"/><ellipse cx="6.8" cy="6.8" rx="2.5" ry="4.5" transform="rotate(-45 6.8 6.8)" fill="#ffcc00"/><ellipse cx="19.2" cy="19.2" rx="2.5" ry="4.5" transform="rotate(-45 19.2 19.2)" fill="#ffcc00"/><ellipse cx="19.2" cy="6.8" rx="2.5" ry="4.5" transform="rotate(45 19.2 6.8)" fill="#ffcc00"/><ellipse cx="6.8" cy="19.2" rx="2.5" ry="4.5" transform="rotate(45 6.8 19.2)" fill="#ffcc00"/><circle cx="13" cy="13" r="6" fill="#1a1208"/><circle cx="13" cy="13" r="3.8" fill="#4a3a18"/></svg></span> somya.</div>
+  <div class="ft-right">MADE WITH ☕ & ✏️ · 2026</div>
+</footer>
+
+<style>
+@keyframes plantSway {
+  0%,100%{transform:rotate(0deg) translateY(0)}
+  50%{transform:rotate(4deg) translateY(-8px)}
+}
+</style>
+
+<script>
+/* Cursor — pencil emoji */
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e=>{
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.wc,.play-card,.bc,.pill,.csoc,.cc-btn,.jtab,.dchip,.mini-pol').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
+
+
+/* Reveal on scroll */
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+
+/* Sketchbook auto-flip */
+const skLeaves = document.querySelectorAll('.sketch-leaf');
+const skRight = document.getElementById('sketchRight');
+const skTotal = skLeaves.length;
+let skCur = 0;
+let skFlipping = false;
+
+function skSetZIndex(){
+  skLeaves.forEach((leaf, i) => {
+    if(i < skCur){
+      // Already turned: low z-index, behind everything
+      leaf.style.zIndex = i;
+    } else {
+      // Not yet turned: higher stacking for closer pages
+      leaf.style.zIndex = skTotal - i + 10;
+    }
+  });
+}
+
+function skReset(){
+  skFlipping = true;
+  // Remove turning class without animation
+  skLeaves.forEach(leaf => {
+    leaf.style.transition = 'none';
+    leaf.classList.remove('turning');
+  });
+  // Force reflow
+  void skLeaves[0].offsetHeight;
+  // Restore transitions
+  skLeaves.forEach(leaf => leaf.style.transition = '');
+  skCur = 0;
+  skSetZIndex();
+  skRight.classList.remove('has-turning');
+  document.getElementById('sketchCounter').textContent = `1 / ${skTotal}`;
+  setTimeout(() => { skFlipping = false; }, 100);
+}
+
+function skFlipNext(){
+  if(skFlipping) return;
+  if(skCur >= skTotal){
+    skReset();
+    return;
+  }
+  skFlipping = true;
+  const leaf = skLeaves[skCur];
+  
+  // Boost z-index of turning leaf so it's on top during flip
+  leaf.style.zIndex = skTotal + 20;
+  skRight.classList.add('has-turning');
+  
+  leaf.classList.add('turning');
+  skCur++;
+  document.getElementById('sketchCounter').textContent = 
+    skCur >= skTotal ? `1 / ${skTotal}` : `${skCur+1} / ${skTotal}`;
+  
+  // After animation completes (match 1.4s CSS transition)
+  setTimeout(() => {
+    skSetZIndex();
+    skRight.classList.remove('has-turning');
+    // If that was the last page, reset immediately so no blank gap
+    if(skCur >= skTotal){
+      skReset();
+    }
+    skFlipping = false;
+  }, 1500);
+}
+
+// Init
+skSetZIndex();
+
+// Auto-flip every 3.5s
+setInterval(skFlipNext, 2500);
+
+/* Subtle parallax on hero board image */
+const boardCol = document.querySelector('.hero-board-col');
+if(boardCol){
+  const boardImg = boardCol.querySelector('.hero-board-img');
+  if(boardImg){
+    boardCol.addEventListener('mousemove',e=>{
+      const r=boardCol.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width - 0.5;
+      const py=(e.clientY-r.top)/r.height - 0.5;
+      boardImg.style.transform = `translate(${px*6}px, ${py*4}px)`;
+    });
+    boardCol.addEventListener('mouseleave',()=>{
+      boardImg.style.transform = '';
+    });
+  }
+}
+
+/* Work card tilt */
+document.querySelectorAll('.wc,.play-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateX(${-y*4}deg) rotateY(${x*4}deg) scale(1.01)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+    card.style.transition='transform .5s cubic-bezier(.16,1,.3,1), background .2s, box-shadow .2s';
+    setTimeout(()=>card.style.transition='',500);
+  });
+});
+
+
+</script>
+</body>
+</html>

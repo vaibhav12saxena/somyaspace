@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Somya · UX Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Ubuntu:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root { --paper:#ffffff; --ink:#000000; --ink2:#373737; --grey:#9d9d9d; --grey2:#696969; }
+body { font-family:'Bricolage Grotesque',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; }
+
+.page-section { min-height:100vh; position:relative; background:var(--paper); display:none; }
+.page-section.active { display:block; }
+.page-inner { max-width:1200px; margin:0 auto; padding:96px 32px; }
+
+/* HERO */
+.hero-content { padding:150px 200px 96px; max-width:1600px; margin:0 auto; }
+.hero-intro { display:flex; flex-direction:column; gap:24px; max-width:856px; }
+.hero-name-block { display:flex; flex-direction:column; gap:12px; }
+.hero-name { font-size:24px; font-weight:700; }
+.hero-role { font-family:'Ubuntu',sans-serif; font-size:20px; font-weight:500; font-style:italic; color:var(--grey); }
+.hero-tagline { font-size:36px; font-weight:700; line-height:1.2; }
+.hero-bio { font-family:'Ubuntu',sans-serif; font-size:20px; font-style:italic; font-weight:500; color:var(--ink2); line-height:1.5; letter-spacing:0.4px; }
+.hero-links-row { display:flex; gap:36px; align-items:flex-start; }
+.hero-link-group { display:flex; flex-direction:column; gap:24px; }
+.hero-link-label { font-size:16px; font-weight:600; }
+.hero-icons { display:flex; gap:24px; align-items:center; }
+.hero-icon-box { width:44px; height:44px; background:#fff; border-radius:4px; display:flex; align-items:center; justify-content:center; padding:4px; }
+.hero-icon-box img { max-width:36px; max-height:37px; display:block; }
+.hero-icon-box a { display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
+
+/* BENTO */
+.hero-bento { position:relative; width:100%; max-width:900px; height:560px; margin-top:64px; border:2px solid var(--ink2); border-radius:12px; overflow:hidden; background:#fafafa; }
+.bento-card { position:absolute; border:2px solid var(--ink2); border-radius:4px; padding:16px; display:flex; flex-direction:column; gap:8px; }
+.bento-card-label { font-size:10px; font-weight:500; color:var(--grey2); }
+.bento-card-title { font-size:14px; font-weight:500; }
+.bento-card-logo img { height:26px; width:auto; display:block; }
+.bento-edu { background:#fdffc1; left:28px; top:68px; width:191px; }
+.bento-psychology { background:#f5faff; left:229px; top:169px; }
+.bento-role { background:#ffdef2; left:354px; top:28px; width:191px; }
+.bento-photo { position:absolute; border-radius:4px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+.bento-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* WORK CARDS */
+.work-heading { font-size:36px; font-weight:700; line-height:1.2; max-width:587px; margin-bottom:48px; }
+.work-sub-heading { font-size:36px; font-weight:700; line-height:1.2; max-width:587px; margin-top:64px; margin-bottom:32px; }
+.work-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px; }
+.work-card { border:4px solid var(--ink); border-radius:12px; padding:40px; display:flex; flex-direction:column; gap:24px; text-decoration:none; color:inherit; transition:transform .2s,box-shadow .2s; }
+.work-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+.work-card-header { display:flex; flex-direction:column; gap:12px; }
+.work-card-title { font-size:24px; font-weight:700; }
+.work-card-tags { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+.work-card-tag { font-family:'Ubuntu',sans-serif; font-size:20px; font-style:italic; font-weight:500; color:var(--ink2); }
+.work-card-dot { font-size:10px; color:var(--ink2); }
+.work-card-divider { width:100%; height:2px; background:var(--ink); opacity:0.15; }
+.work-card-desc { font-family:'Ubuntu',sans-serif; font-size:24px; font-weight:400; color:var(--ink); line-height:1.4; }
+.work-card-stats { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+.work-card-stat { font-size:24px; font-weight:700; }
+.card-green { background:#e6ffd0; }
+.card-red { background:#ffe1e1; }
+.card-orange { background:#fff0e0; }
+.card-purple { background:#e9dfff; }
+.card-yellow { background:#ffffca; }
+.card-blue { background:#dff0ff; }
+
+/* LIFE */
+.life-heading { font-size:36px; font-weight:700; margin-bottom:48px; }
+.sketchbook-wrap { display:flex; justify-content:center; padding:0 32px; }
+.sketchbook { position:relative; display:flex; width:100%; max-width:800px; aspect-ratio:4/3; filter:drop-shadow(0 8px 28px rgba(0,0,0,0.12)); }
+.sketch-left-page { flex:1; background:linear-gradient(to right,#f9f6f1,#fdfaf6); border:1.5px solid rgba(44,36,23,0.12); border-right:none; border-radius:8px 0 0 8px; position:relative; overflow:hidden; }
+.sketch-left-page::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,rgba(44,36,23,0.04) 27px,rgba(44,36,23,0.04) 28px); pointer-events:none; }
+.sketch-left-label { position:absolute; bottom:24px; left:24px; font-family:'Caveat',cursive; font-size:18px; color:rgba(44,36,23,0.18); transform:rotate(-2deg); }
+.sketch-right-page { flex:1; background:linear-gradient(to left,#f9f6f1,#fdfaf6); border:1.5px solid rgba(44,36,23,0.12); border-left:none; border-radius:0 8px 8px 0; position:relative; overflow:visible; perspective:1800px; }
+.sketch-leaf { position:absolute; inset:0; transform-origin:left center; transform-style:preserve-3d; transition:transform 1.4s cubic-bezier(0.455,0.03,0.515,0.955); will-change:transform; cursor:pointer; }
+.sketch-leaf.turning { transform:rotateY(-180deg); }
+.sketch-leaf-front, .sketch-leaf-back { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:0 6px 6px 0; overflow:hidden; }
+.sketch-leaf-front img { width:100%; height:100%; object-fit:cover; display:block; }
+.sketch-leaf-front::after { content:''; position:absolute; right:0; top:0; bottom:0; width:20px; background:linear-gradient(to left,rgba(0,0,0,0.04),transparent); pointer-events:none; }
+.sketch-leaf-back { transform:rotateY(180deg); background:#f5f0e8; background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,rgba(44,36,23,0.05) 27px,rgba(44,36,23,0.05) 28px); }
+.sketch-leaf-back::after { content:''; position:absolute; right:0; top:0; bottom:0; width:50px; background:linear-gradient(to left,rgba(0,0,0,0.08) 0%,transparent 100%); pointer-events:none; }
+.sketch-right-page::before { content:''; position:absolute; left:0; top:0; bottom:0; width:0; background:linear-gradient(to right,rgba(0,0,0,0.12),transparent); z-index:25; pointer-events:none; transition:width 0.6s ease; }
+.sketch-right-page.has-turning::before { width:40px; }
+.sketch-counter { position:absolute; bottom:10px; right:14px; font-family:'Caveat',cursive; font-size:15px; color:rgba(44,36,23,0.25); z-index:26; }
+
+/* JOURNEY */
+.journey-heading { font-size:36px; font-weight:700; margin-bottom:48px; }
+.journey-road { width:100%; max-width:1200px; margin:0 auto; }
+.journey-road img { width:100%; height:auto; display:block; }
+
+/* NAV */
+.site-nav { position:fixed; bottom:0; right:0; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; pointer-events:none; }
+.nav-labels { display:flex; flex-direction:column; align-items:flex-end; gap:8px; margin-right:48px; pointer-events:auto; }
+.nav-label { cursor:pointer; transition:transform .2s,opacity .2s; display:block; }
+.nav-label img { display:block; height:auto; }
+.nav-label:hover { transform:scale(1.08); }
+.nav-label.work-label img { width:72px; }
+.nav-label.life-label img { width:53px; }
+.nav-label.journey-label img { width:103px; }
+.nav-label.active.work-label img { width:90px; }
+.nav-label.active.life-label img { width:66px; }
+.nav-label.active.journey-label img { width:129px; }
+.nav-character { width:200px; pointer-events:auto; cursor:pointer; margin-right:16px; transition:transform .3s; }
+.nav-character:hover { transform:scale(1.03); }
+.nav-character img { width:100%; height:auto; display:block; }
+
+.reveal { opacity:0; transform:translateY(24px); transition:opacity .65s ease,transform .65s cubic-bezier(.16,1,.3,1); }
+.reveal.vis { opacity:1; transform:translateY(0); }
+
+@media(max-width:960px){
+  .hero-content { padding:96px 20px 64px; }
+  .hero-tagline { font-size:28px; }
+  .hero-bio { font-size:16px; }
+  .hero-links-row { flex-direction:column; gap:24px; }
+  .hero-bento { height:400px; margin-top:32px; }
+  .work-grid { grid-template-columns:1fr; }
+  .work-card { padding:24px; }
+  .work-card-desc { font-size:18px; }
+  .page-inner { padding:64px 20px; }
+  .sketchbook { max-width:480px; }
+  .nav-character { width:140px; }
+  .nav-labels { margin-right:28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: HERO -->
+<section id="page-hero" class="page-section active">
+<div class="hero-content">
+  <div class="hero-intro reveal">
+    <div class="hero-name-block">
+      <p class="hero-name">Hi, I'm Somya</p>
+      <p class="hero-role">Sr. UX Designer @Enphase Energy</p>
+    </div>
+    <p class="hero-tagline">Designing scalable systems for complex products.</p>
+    <div class="hero-bio">
+      <p>I am an engineer turned designer. Once immersed in the field of engineering, I discovered a passion for the art that shapes user experiences.</p>
+      <br>
+      <p>Today, I proudly wear the hat of a product designer, where I blend the analytical mindset of an engineer with the creative flair I've cherished since my childhood days.</p>
+    </div>
+    <div class="hero-links-row">
+      <div class="hero-link-group">
+        <p class="hero-link-label">Current tech stack</p>
+        <div class="hero-icons">
+          <div class="hero-icon-box"><a href="https://www.figma.com" target="_blank"><img src="Images/hero/icon-figma.png" alt="Figma"></a></div>
+          <div class="hero-icon-box"><a href="https://www.anthropic.com/claude" target="_blank"><img src="Images/hero/icon-claude.png" alt="Claude"></a></div>
+          <div class="hero-icon-box"><a href="https://devin.ai" target="_blank"><img src="Images/hero/icon-devin.png" alt="Devin"></a></div>
+        </div>
+      </div>
+      <div class="hero-link-group" style="flex:1;">
+        <p class="hero-link-label">Links</p>
+        <div class="hero-icons">
+          <div class="hero-icon-box"><a href="https://www.linkedin.com/in/somyaburman/" target="_blank"><img src="Images/hero/icon-linkedin.png" alt="LinkedIn"></a></div>
+          <div class="hero-icon-box"><a href="mailto:somya_b@design.iitr.ac.in"><img src="Images/hero/icon-gmail.png" alt="Email"></a></div>
+          <div class="hero-icon-box"><a href="resume.html" target="_blank"><img src="Images/hero/icon-resume.png" alt="Resume"></a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-bento reveal">
+    <div class="bento-card bento-edu">
+      <span class="bento-card-label">Education</span>
+      <span class="bento-card-title">Masters in Design</span>
+      <div class="bento-card-logo"><img src="Images/hero/card-education.png" alt="IIT Roorkee"></div>
+    </div>
+    <div class="bento-card bento-psychology">
+      <span class="bento-card-label">Currently perusing (Distance)</span>
+      <span class="bento-card-title">Masters in Human Psychology</span>
+      <div class="bento-card-logo"><img src="Images/hero/card-psychology.png" alt="IGNOU" style="height:36px;"></div>
+    </div>
+    <div class="bento-card bento-role">
+      <span class="bento-card-label">Current role</span>
+      <span class="bento-card-title">Senior UX Designer</span>
+      <div class="bento-card-logo"><img src="Images/enphase.png" alt="Enphase"></div>
+    </div>
+    <div class="bento-photo" style="left:94px;top:185px;width:122px;height:103px;"><img src="Images/hero/card-designathon-new.png" alt="Workshop"></div>
+    <div class="bento-photo" style="left:567px;top:129px;width:94px;height:81px;"><img src="Images/hero/card-philosophy.png" alt="Note"></div>
+    <div class="bento-photo" style="left:732px;top:0;width:147px;height:135px;"><img src="Images/hero/flowerpot-new.png" alt="Flowerpot"></div>
+    <div class="bento-photo" style="left:749px;top:153px;width:113px;height:153px;"><img src="Images/hero/card-honorary.png" alt="Certificate"></div>
+  </div>
+</div>
+</section>
+
+<!-- PAGE 2: WORK -->
+<section id="page-work" class="page-section">
+<div class="page-inner">
+  <h2 class="work-heading reveal">a few favourites from my time at Enphase and beyond</h2>
+  <div class="work-grid reveal">
+    <a href="enphase-ai-assistant.html" class="work-card card-green">
+      <div class="work-card-header">
+        <div class="work-card-title">Enphase AI Assistant</div>
+        <div class="work-card-tags">
+          <span class="work-card-tag">Gen AI</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Conversation Design</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">0 &#8594; 1</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">B2B2C</span>
+        </div>
+      </div>
+      <div class="work-card-divider"></div>
+      <p class="work-card-desc">Designed Enphase's first AI support assistant, helping homeowners and installers resolve issues through natural conversations across multiple products.</p>
+      <div class="work-card-divider"></div>
+      <div class="work-card-stats">
+        <span class="work-card-stat">54k+ users</span><span class="work-card-dot">&#10039;</span>
+        <span class="work-card-stat">87% like rate</span><span class="work-card-dot">&#10039;</span>
+        <span class="work-card-stat">2 Personas</span>
+      </div>
+    </a>
+    <a href="solaris-design-system.html" class="work-card card-red">
+      <div class="work-card-header">
+        <div class="work-card-title">Redesigning the Solar Design Experience</div>
+        <div class="work-card-tags">
+          <span class="work-card-tag">Enterprise SaaS</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Workflow Design</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Design Tool</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">B2B</span>
+        </div>
+      </div>
+      <div class="work-card-divider"></div>
+      <p class="work-card-desc">Reimagined the proposal creation workflow to help solar designers create and edit system designs faster with fewer iterations.</p>
+      <div class="work-card-divider"></div>
+      <div class="work-card-stats">
+        <span class="work-card-stat">54k+ users</span><span class="work-card-dot">&#10039;</span>
+        <span class="work-card-stat">2 Personas</span><span class="work-card-dot">&#10039;</span>
+        <span class="work-card-stat">87% like rate</span>
+      </div>
+    </a>
+  </div>
+  <div class="work-grid reveal" style="margin-top:32px;">
+    <a href="dark-mode-generator.html" class="work-card card-orange">
+      <div class="work-card-header">
+        <div class="work-card-title">AI-powered Observability for Faster Issue Resolution</div>
+        <div class="work-card-tags">
+          <span class="work-card-tag">AI</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Internal Platform</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Observability</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Self-initiated/Collaborated with Engineering</span>
+        </div>
+      </div>
+      <div class="work-card-divider"></div>
+      <p class="work-card-desc">Designed an AI-assisted observability platform that helps engineering teams detect, investigate and resolve production issues faster.</p>
+      <div class="work-card-divider"></div>
+      <div class="work-card-stats">
+        <span class="work-card-stat">40% faster investigations</span>
+      </div>
+    </a>
+    <a href="ar-troubleshooting-guide.html" class="work-card card-purple">
+      <div class="work-card-header">
+        <div class="work-card-title">AR-powered Self Troubleshooting Guide</div>
+        <div class="work-card-tags">
+          <span class="work-card-tag">AR/XR</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">M.Des Thesis Project</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Ennovate'23 Honorary Mention</span>
+        </div>
+      </div>
+      <div class="work-card-divider"></div>
+      <p class="work-card-desc">Created an augmented reality experience that guided homeowners through troubleshooting, reducing support dependency.</p>
+      <div class="work-card-divider"></div>
+      <div class="work-card-stats">
+        <span class="work-card-stat">50.4k fewer support calls</span><span class="work-card-dot">&#10039;</span>
+        <span class="work-card-stat">25.2k support hours saved</span><span class="work-card-dot">&#10039;</span>
+        <span class="work-card-stat">15.1k homeowners helped</span>
+      </div>
+    </a>
+  </div>
+  <h2 class="work-sub-heading reveal">personal explorations</h2>
+  <div class="work-grid reveal">
+    <a href="india-runs-on-chai.html" class="work-card card-yellow">
+      <div class="work-card-header">
+        <div class="work-card-title">India Runs on Chai</div>
+        <div class="work-card-tags">
+          <span class="work-card-tag">Visual Design</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Data as Art</span>
+        </div>
+      </div>
+      <div class="work-card-divider"></div>
+      <p class="work-card-desc">A personal data storytelling project exploring India's relationship with chai through illustration and information design.</p>
+    </a>
+    <a href="spec-redline-generator.html" class="work-card card-blue">
+      <div class="work-card-header">
+        <div class="work-card-title">Design Tools for Designers</div>
+        <div class="work-card-tags">
+          <span class="work-card-tag">Prompt Engineering</span><span class="work-card-dot">&#10039;</span>
+          <span class="work-card-tag">Figma Plugins</span>
+        </div>
+      </div>
+      <div class="work-card-divider"></div>
+      <p class="work-card-desc">Built Figma plugins that automate repetitive design tasks, from theme conversion to specification generation.</p>
+    </a>
+  </div>
+</div>
+</section>
+
+<!-- PAGE 3: LIFE -->
+<section id="page-life" class="page-section">
+<div class="page-inner">
+  <h2 class="life-heading reveal">life (beyond 9 to 6)</h2>
+  <div class="sketchbook-wrap reveal">
+    <div class="sketchbook" id="sketchbook">
+      <div class="sketch-left-page"><span class="sketch-left-label">sketchbook</span></div>
+      <div class="sketch-right-page" id="sketchRight">
+        <div class="sketch-leaf" style="z-index:11"><div class="sketch-leaf-front"><img src="Images/carousel image 1.jpeg" alt="Artwork 1"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:10"><div class="sketch-leaf-front"><img src="Images/carousel image 2.jpeg" alt="Artwork 2"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:9"><div class="sketch-leaf-front"><img src="Images/carousel image 3.jpeg" alt="Artwork 3"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:8"><div class="sketch-leaf-front"><img src="Images/carousel image 4.jpeg" alt="Artwork 4"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:7"><div class="sketch-leaf-front"><img src="Images/carousel image 5.jpeg" alt="Artwork 5"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:6"><div class="sketch-leaf-front"><img src="Images/sketch_6.png" alt="Artwork 6"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:5"><div class="sketch-leaf-front"><img src="Images/sketch_7.png" alt="Artwork 7"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:4"><div class="sketch-leaf-front"><img src="Images/sketch_8.png" alt="Artwork 8"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:3"><div class="sketch-leaf-front"><img src="Images/sketch_9.png" alt="Artwork 9"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:2"><div class="sketch-leaf-front"><img src="Images/sketch_10.png" alt="Artwork 10"></div><div class="sketch-leaf-back"></div></div>
+        <div class="sketch-leaf" style="z-index:1"><div class="sketch-leaf-front"><img src="Images/sketch_11.png" alt="Artwork 11"></div><div class="sketch-leaf-back"></div></div>
+        <span class="sketch-counter" id="sketchCounter">1 / 11</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- PAGE 4: JOURNEY -->
+<section id="page-journey" class="page-section">
+<div class="page-inner">
+  <h2 class="journey-heading reveal">journey</h2>
+  <div class="journey-road reveal">
+    <img src="Images/journey-road.png" alt="Journey timeline: BTech CS at RGPV (2014-2018), Sr Software Engineer at Capgemini (2018-2020), Visual Storyteller at CyberTapri (2020-2021), M.Des Product Design at IIT Roorkee (2021-2023), Sr UX Designer at Enphase (2023-present), MA Psychology at IGNOU (2025-ongoing)">
+  </div>
+</div>
+</section>
+
+<!-- PERSISTENT NAV -->
+<div class="site-nav" id="siteNav">
+  <div class="nav-labels">
+    <div class="nav-label work-label" data-page="page-work" id="navWork">
+      <img src="Images/nav/neutral-work.png" alt="Work" data-neutral="Images/nav/neutral-work.png" data-active="Images/nav/selected-work.png">
+    </div>
+    <div class="nav-label life-label" data-page="page-life" id="navLife">
+      <img src="Images/nav/neutral-life.png" alt="Life" data-neutral="Images/nav/neutral-life.png" data-active="Images/nav/selected-life.png">
+    </div>
+    <div class="nav-label journey-label" data-page="page-journey" id="navJourney">
+      <img src="Images/nav/neutral-journey.png" alt="Journey" data-neutral="Images/nav/neutral-journey.png" data-active="Images/nav/selected-journey.png">
+    </div>
+  </div>
+  <div class="nav-character" id="navCharacter">
+    <img src="Images/nav/char-neutral.png" alt="Somya character" id="navCharImg">
+  </div>
+</div>
+
+<script>
+/* Page Navigation */
+const pages = {
+  'page-hero': { char:'Images/nav/char-neutral.png', label:null },
+  'page-work': { char:'Images/nav/char-work.png', label:'navWork' },
+  'page-life': { char:'Images/nav/char-life.png', label:'navLife' },
+  'page-journey': { char:'Images/nav/char-journey.png', label:'navJourney' }
+};
+
+let currentPage = 'page-hero';
+
+function showPage(pageId) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  currentPage = pageId;
+
+  // Update character
+  document.getElementById('navCharImg').src = pages[pageId].char;
+
+  // Update labels
+  document.querySelectorAll('.nav-label').forEach(label => {
+    const img = label.querySelector('img');
+    const isActive = label.dataset.page === pageId;
+    label.classList.toggle('active', isActive);
+    img.src = isActive ? img.dataset.active : img.dataset.neutral;
+  });
+
+  // Trigger reveals
+  window.scrollTo(0, 0);
+  setTimeout(() => {
+    document.querySelectorAll('#' + pageId + ' .reveal').forEach(el => el.classList.add('vis'));
+  }, 100);
+}
+
+// Nav label click
+document.querySelectorAll('.nav-label').forEach(label => {
+  label.addEventListener('click', () => showPage(label.dataset.page));
+
+  // Hover: show that state's character
+  label.addEventListener('mouseenter', () => {
+    const targetPage = label.dataset.page;
+    document.getElementById('navCharImg').src = pages[targetPage].char;
+    const img = label.querySelector('img');
+    label.classList.add('active');
+    img.src = img.dataset.active;
+  });
+
+  label.addEventListener('mouseleave', () => {
+    // Restore current page state
+    document.getElementById('navCharImg').src = pages[currentPage].char;
+    const img = label.querySelector('img');
+    const isActive = label.dataset.page === currentPage;
+    label.classList.toggle('active', isActive);
+    img.src = isActive ? img.dataset.active : img.dataset.neutral;
+  });
+});
+
+// Character click goes home
+document.getElementById('navCharacter').addEventListener('click', () => showPage('page-hero'));
+
+// Init reveals for hero
+setTimeout(() => {
+  document.querySelectorAll('#page-hero .reveal').forEach(el => el.classList.add('vis'));
+}, 100);
+
+/* Sketchbook auto-flip */
+const skLeaves = document.querySelectorAll('.sketch-leaf');
+const skRight = document.getElementById('sketchRight');
+const skTotal = skLeaves.length;
+let skCur = 0, skFlipping = false;
+
+function skSetZIndex(){
+  skLeaves.forEach((leaf, i) => {
+    leaf.style.zIndex = i < skCur ? i : skTotal - i + 10;
+  });
+}
+
+function skReset(){
+  skFlipping = true;
+  skLeaves.forEach(leaf => { leaf.style.transition='none'; leaf.classList.remove('turning'); });
+  void skLeaves[0].offsetHeight;
+  skLeaves.forEach(leaf => leaf.style.transition='');
+  skCur = 0;
+  skSetZIndex();
+  skRight.classList.remove('has-turning');
+  document.getElementById('sketchCounter').textContent = '1 / ' + skTotal;
+  setTimeout(() => { skFlipping = false; }, 100);
+}
+
+function skFlipNext(){
+  if(skFlipping) return;
+  if(skCur >= skTotal){ skReset(); return; }
+  skFlipping = true;
+  const leaf = skLeaves[skCur];
+  leaf.style.zIndex = skTotal + 20;
+  skRight.classList.add('has-turning');
+  leaf.classList.add('turning');
+  skCur++;
+  document.getElementById('sketchCounter').textContent = skCur >= skTotal ? '1 / ' + skTotal : (skCur+1) + ' / ' + skTotal;
+  setTimeout(() => {
+    skSetZIndex();
+    skRight.classList.remove('has-turning');
+    if(skCur >= skTotal) skReset();
+    skFlipping = false;
+  }, 1500);
+}
+
+skSetZIndex();
+setInterval(skFlipNext, 2500);
+</script>
+</body>
+</html>
