@@ -173,9 +173,10 @@ body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color
 .journey-steps-grid { display:flex; flex-direction:column; gap:24px; }
 .journey-step-card { position:relative; }
 .journey-step-card img { width:100%; border-radius:20px; display:block; }
-.step-badge { display:inline-flex; align-items:center; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.step-badge { display:flex; align-items:center; gap:8px; margin-top:12px; flex-wrap:wrap; row-gap:8px; }
+.step-pair { display:inline-flex; align-items:center; gap:8px; flex-shrink:0; }
 .step-num { width:24px; height:24px; border-radius:50%; background:var(--text); color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.step-label { font-family:'Ubuntu',sans-serif; font-size:14px; color:var(--text2); margin-right:16px; }
+.step-label { font-family:'Ubuntu',sans-serif; font-size:14px; color:var(--text2); }
 
 /* MOBILE SCREENS GRID */
 .mobile-screens { display:grid; grid-template-columns:repeat(6,1fr); gap:16px; margin-top:32px; }
@@ -247,6 +248,7 @@ body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color
   .mobile-screens { grid-template-columns:repeat(2,1fr); }
   .mobile-screens.three-col { grid-template-columns:1fr; }
   .journey-steps-grid { grid-template-columns:1fr; }
+  .step-badge { justify-content:flex-start !important; }
 }
 </style>
 </head>
@@ -267,7 +269,7 @@ body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color
       <span class="hero-tag">Embedded AI Journeys</span>
     </div>
     <div class="hero-meta">
-      <span>6 weeks</span>
+      <span>12 weeks</span>
       <img src="Images/ai-assistant/star.svg" alt="">
       <span>Individual Contributor</span>
       <img src="Images/ai-assistant/star.svg" alt="">
@@ -594,23 +596,23 @@ body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color
     <div class="journey-steps-grid">
       <div class="journey-step-card">
         <img src="Images/ai-assistant/enlm/journey-step1.png" alt="Step 1: Installer opens AI assistant">
-        <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">1</span><span class="step-label">Installer opens AI assistant</span><span class="step-num">2</span><span class="step-label">AI asks for project documents</span><span class="step-num">3</span><span class="step-label">Documents uploaded &amp; processed</span></div>
+        <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">1</span><span class="step-label">Installer opens AI assistant</span></span><span class="step-pair"><span class="step-num">2</span><span class="step-label">AI asks for project documents</span></span><span class="step-pair"><span class="step-num">3</span><span class="step-label">Documents uploaded &amp; processed</span></span></div>
       </div>
       <div class="journey-step-card">
         <img src="Images/ai-assistant/enlm/journey-step2.png" alt="Step 2: AI extracts site details from SLD">
-        <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">4</span><span class="step-label">AI extracts site details from SLD</span><span class="step-num">5</span><span class="step-label">Installer reviews extracted data</span></div>
+        <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">4</span><span class="step-label">AI extracts site details from SLD</span></span><span class="step-pair"><span class="step-num">5</span><span class="step-label">Installer reviews extracted data</span></span></div>
       </div>
       <div class="journey-step-card">
         <img src="Images/ai-assistant/enlm/journey-step3.png" alt="Step 3: Site created, ready to commission">
-        <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">6</span><span class="step-label">Site created, ready to commission</span></div>
+        <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">6</span><span class="step-label">Site created, ready to commission</span></span></div>
       </div>
       <div class="journey-step-card">
         <img src="Images/ai-assistant/enlm/journey-step4.png" alt="Step 4: Installation checklist generated">
-        <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">7</span><span class="step-label">Installation checklist generated</span></div>
+        <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">7</span><span class="step-label">Installation checklist generated</span></span></div>
       </div>
       <div class="journey-step-card">
         <img src="Images/ai-assistant/enlm/journey-step5.png" alt="Step 5: Context carries to next job">
-        <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">8</span><span class="step-label">Context carries to next job</span></div>
+        <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">8</span><span class="step-label">Context carries to next job</span></span></div>
       </div>
     </div>
     <p class="journey-steps-title reveal" style="margin-top:64px;">From site to store, AI carries context across products.</p>
@@ -631,12 +633,12 @@ body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color
 
   <div class="reveal" style="margin-top:48px;">
     <img class="product-img" src="Images/ai-assistant/store/store-screen1.png" alt="Store AI recommending compatible products">
-    <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">9</span><span class="step-label">Store already has context of equipment details</span></div>
+    <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">9</span><span class="step-label">Store already has context of equipment details</span></span></div>
   </div>
 
   <div class="reveal" style="margin-top:48px;">
     <img class="product-img" src="Images/ai-assistant/store/store-screen2.png" alt="Store AI building a ready-to-order cart">
-    <div class="step-badge" style="justify-content:flex-end;"><span class="step-num">10</span><span class="step-label">AI builds the cart for installer</span></div>
+    <div class="step-badge" style="justify-content:flex-end;"><span class="step-pair"><span class="step-num">10</span><span class="step-label">AI builds the cart for installer</span></span></div>
   </div>
 </section>
 

@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Ubuntu:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+html { scroll-behavior:smooth; overflow-x:hidden; }
 :root { --paper:#ffffff; --ink:#000000; --ink2:#373737; --grey:#9d9d9d; --grey2:#696969; }
 body { font-family:'Bricolage Grotesque',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; cursor:url('Images/cursor-pencil.svg') 2 30, auto; }
 body::after { content:''; position:fixed; inset:0; z-index:9999; pointer-events:none; opacity:0.06; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='6' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)'/%3E%3C/svg%3E"); }
@@ -46,7 +46,9 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 .work-heading { font-size:36px; font-weight:700; line-height:1.2; max-width:587px; margin-bottom:48px; }
 .work-sub-heading { font-size:36px; font-weight:700; line-height:1.2; max-width:587px; margin-top:64px; margin-bottom:32px; }
 .work-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:32px; position:relative; }
-.work-card.featured { grid-column:1 / -1; }
+.work-card.featured { grid-column:1 / -1; flex-direction:row; align-items:center; }
+.work-card.featured .work-card-text { flex:1; display:flex; flex-direction:column; gap:16px; min-width:0; }
+.work-card.featured .work-card-preview { width:45%; max-width:420px; flex-shrink:0; margin-top:0; }
 .work-card { position:relative; border-radius:16px; padding:36px 36px 36px 40px; display:flex; flex-direction:column; gap:16px; text-decoration:none; color:inherit; transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease; overflow:hidden; border:1.5px solid var(--ink); }
 .work-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,0.1),0 2px 8px rgba(0,0,0,0.04); }
 
@@ -72,6 +74,15 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 .card-purple { background:linear-gradient(135deg,#e9dfff 0%,#f3efff 100%); }
 .card-yellow { background:linear-gradient(135deg,#ffffca 0%,#fffff0 100%); }
 .card-blue { background:linear-gradient(135deg,#dff0ff 0%,#eef6ff 100%); }
+
+/* Project preview in card */
+.work-card-preview { width:100%; border-radius:12px; overflow:hidden; border:1.5px solid rgba(0,0,0,0.1); background:#fff; margin-top:8px; box-shadow:0 4px 24px rgba(0,0,0,0.08); }
+.work-card-preview-bar { height:24px; background:#f0f0f0; display:flex; align-items:center; padding:0 10px; gap:5px; border-bottom:1px solid rgba(0,0,0,0.06); }
+.work-card-preview-dot { width:6px; height:6px; border-radius:50%; }
+.work-card-preview-dot:nth-child(1) { background:#ff5f57; }
+.work-card-preview-dot:nth-child(2) { background:#febc2e; }
+.work-card-preview-dot:nth-child(3) { background:#28c840; }
+.work-card-preview img { width:100%; height:auto; display:block; }
 
 /* LIFE */
 .life-heading { font-size:36px; font-weight:700; margin-bottom:48px; }
@@ -99,7 +110,7 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 
 /* NAV */
 .site-nav { position:fixed; bottom:0; right:0; z-index:1000; pointer-events:none; }
-.nav-frame { position:relative; width:301px; height:644px; pointer-events:auto; }
+.nav-frame { position:relative; width:301px; height:644px; pointer-events:auto; overflow:hidden; }
 
 /* Character layer */
 .nav-chars { position:absolute; left:3px; top:255px; width:295px; height:389px; }
@@ -116,14 +127,15 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 .nav-label-slot .label-active { transition:opacity .35s ease; }
 .nav-label-slot .label-neutral { opacity:1; }
 .nav-label-slot .label-active { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0; }
+.nav-label-slot img { filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px #fff); }
 .nav-label-slot.active .label-neutral { opacity:0; }
 .nav-label-slot.active .label-active { opacity:1; }
 
 /* Label positions from Figma: right-aligned within 301px frame */
-.nav-slot-home { top:0; right:0; width:75px; height:40px; display:flex; align-items:center; justify-content:center; }
-.nav-slot-work { top:76px; right:0; width:90px; height:46px; display:flex; align-items:center; justify-content:center; }
-.nav-slot-life { top:152px; right:0; width:66px; height:46px; display:flex; align-items:center; justify-content:center; }
-.nav-slot-journey { top:228px; right:0; width:129px; height:46px; display:flex; align-items:center; justify-content:center; }
+.nav-slot-home { top:0; right:0; width:75px; height:40px; display:flex; align-items:center; justify-content:flex-end; }
+.nav-slot-work { top:76px; right:0; width:90px; height:46px; display:flex; align-items:center; justify-content:flex-end; }
+.nav-slot-life { top:152px; right:0; width:66px; height:46px; display:flex; align-items:center; justify-content:flex-end; }
+.nav-slot-journey { top:228px; right:0; width:129px; height:46px; display:flex; align-items:center; justify-content:flex-end; }
 
 /* Label image sizing */
 .nav-slot-home .label-neutral img { width:75px; }
@@ -149,12 +161,14 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
   .hero-bento { margin-top:32px; }
   .work-grid { grid-template-columns:1fr; }
   .work-card { padding:24px; }
+  .work-card.featured { flex-direction:column; }
+  .work-card.featured .work-card-preview { width:100%; max-width:100%; }
   .work-card-desc { font-size:18px; }
   .page-inner { padding:64px 20px; }
   .sketchbook { max-width:480px; }
   .nav-frame { width:200px; height:428px; }
   .nav-chars { left:2px; top:170px; width:196px; height:258px; }
-  .nav-labels { width:123px; height:182px; right:20px; }
+  .nav-labels { width:123px; height:182px; right:20px; background:rgba(255,255,255,0.7); border-radius:12px; padding:8px 4px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
   .nav-slot-home { height:27px; }
   .nav-slot-work { top:50px; height:31px; }
   .nav-slot-life { top:101px; height:31px; }
@@ -172,7 +186,7 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 @media(max-width:480px){
   .nav-frame { width:150px; height:320px; }
   .nav-chars { left:1px; top:127px; width:147px; height:193px; }
-  .nav-labels { width:92px; height:136px; right:12px; }
+  .nav-labels { width:92px; height:136px; right:12px; background:rgba(255,255,255,0.7); border-radius:12px; padding:8px 4px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
   .nav-slot-home { height:20px; }
   .nav-slot-work { top:38px; height:23px; }
   .nav-slot-life { top:76px; height:23px; }
@@ -223,25 +237,30 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 <section id="page-work" class="page-section" data-nav="page-work">
 <div class="page-card">
 <div class="page-inner">
-  <h2 class="work-heading reveal">a few favourites from my time at Enphase and beyond</h2>
+  <h2 class="work-heading reveal">a few favourites from my time at Enphase</h2>
   <div class="work-grid reveal">
     <a href="enphase-ai-assistant.html?v=2" target="_blank" class="work-card card-green featured">
-      <div class="work-card-header">
-        <div class="work-card-title">Unifying a Fragmented Installer Ecosystem</div>
-        <div class="work-card-tags">
-          <span class="work-card-tag">Conversational AI</span>
-          <span class="work-card-tag">Embedded AI Journeys</span>
-          <span class="work-card-tag">B2B</span>
+      <div class="work-card-text">
+        <div class="work-card-header">
+          <div class="work-card-title">Unifying a Fragmented Installer Ecosystem</div>
+          <div class="work-card-tags">
+            <span class="work-card-tag">Conversational AI</span>
+            <span class="work-card-tag">Embedded AI Journeys</span>
+            <span class="work-card-tag">B2B</span>
+          </div>
+        </div>
+        <div class="work-card-divider"></div>
+        <p class="work-card-desc">Designing an AI native experience that assists installers before, during and after system installation.</p>
+        <div class="work-card-divider"></div>
+        <div class="work-card-stats">
+          <span class="work-card-stat">~35% faster journey</span>
+          <span class="work-card-stat">8,545 AI wiring checks</span>
+          <span class="work-card-stat">3 Product Teams</span>
+          <span class="work-card-stat">12 weeks</span>
         </div>
       </div>
-      <div class="work-card-divider"></div>
-      <p class="work-card-desc">Designing an AI native experience that assists installers before, during and after system installation.</p>
-      <div class="work-card-divider"></div>
-      <div class="work-card-stats">
-        <span class="work-card-stat">~35% faster journey</span>
-        <span class="work-card-stat">8,545 AI wiring checks</span>
-        <span class="work-card-stat">3 Product Teams</span>
-        <span class="work-card-stat">6 weeks</span>
+      <div class="work-card-preview" style="border:none;box-shadow:none;">
+        <img src="Images/ai-assistant/enlm/dashboard-hero.png" alt="Enphase AI Assistant dashboard preview" style="border-radius:12px;">
       </div>
     </a>
     <a href="solaris-design-system.html" target="_blank" class="work-card card-red">
@@ -255,12 +274,15 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
         </div>
       </div>
       <div class="work-card-divider"></div>
-      <p class="work-card-desc">Reimagined the proposal creation workflow to help solar designers create and edit system designs faster with fewer iterations.</p>
+      <p class="work-card-desc">Building the design system for Solargraf using token architecture.</p>
       <div class="work-card-divider"></div>
       <div class="work-card-stats">
         <span class="work-card-stat">54k+ users</span>
         <span class="work-card-stat">2 Personas</span>
         <span class="work-card-stat">87% like rate</span>
+      </div>
+      <div class="work-card-preview" style="border:none;box-shadow:none;">
+        <img src="Images/solaris-preview.png" alt="Solargraf design system preview" style="border-radius:12px;">
       </div>
     </a>
     <a href="ar-troubleshooting-guide.html" target="_blank" class="work-card card-purple">
@@ -279,20 +301,28 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
         <span class="work-card-stat">50.4k fewer support calls</span>
         <span class="work-card-stat">25.2k support hours saved</span>
       </div>
+      <div class="work-card-preview">
+        <img src="Images/ar-preview.png" alt="AR troubleshooting guide preview" style="border-radius:12px;">
+      </div>
     </a>
   </div>
   <h2 class="work-sub-heading reveal">playground</h2>
   <div class="work-grid reveal">
     <a href="solargraf-icon-set.html" target="_blank" class="work-card card-orange featured">
-      <div class="work-card-header">
-        <div class="work-card-title">Redesigning Iconography for Solargraf</div>
-        <div class="work-card-tags">
-          <span class="work-card-tag">Iconography</span>
-          <span class="work-card-tag">Visual Systems</span>
+      <div class="work-card-text">
+        <div class="work-card-header">
+          <div class="work-card-title">Redesigning Iconography for Solargraf</div>
+          <div class="work-card-tags">
+            <span class="work-card-tag">Iconography</span>
+            <span class="work-card-tag">Visual Systems</span>
+          </div>
         </div>
+        <div class="work-card-divider"></div>
+        <p class="work-card-desc">Rebuilt Solargraf's icon system from the ground up, creating a consistent visual language across the product.</p>
       </div>
-      <div class="work-card-divider"></div>
-      <p class="work-card-desc">Rebuilt Solargraf's icon system from the ground up, creating a consistent visual language across the product.</p>
+      <div class="work-card-preview" style="border:none;box-shadow:none;">
+        <img src="Images/iconography/card-preview.png" alt="Solargraf icon anatomy and design rules" style="border-radius:12px;">
+      </div>
     </a>
     <a href="https://www.figma.com/proto/fi5xYJU2RFkMJr4xUvgbGs/Untitled?node-id=7-1314&t=Mx7BiVhRp95lEK72-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=7%3A1314" target="_blank" class="work-card card-yellow">
       <div class="work-card-header">
