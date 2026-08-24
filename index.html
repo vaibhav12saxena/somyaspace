@@ -49,8 +49,8 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 .work-card.featured { grid-column:1 / -1; flex-direction:row; align-items:center; }
 .work-card.featured .work-card-text { flex:1; display:flex; flex-direction:column; gap:16px; min-width:0; }
 .work-card.featured .work-card-preview { width:45%; max-width:420px; flex-shrink:0; margin-top:0; }
-.work-card { position:relative; border-radius:16px; padding:36px 36px 36px 40px; display:flex; flex-direction:column; gap:16px; text-decoration:none; color:inherit; transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease; overflow:hidden; border:1.5px solid var(--ink); }
-.work-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,0.1),0 2px 8px rgba(0,0,0,0.04); }
+.work-card { position:relative; border-radius:16px; padding:36px 36px 36px 40px; display:flex; flex-direction:column; gap:16px; text-decoration:none; color:inherit; transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease; overflow:hidden; border:none; outline:1.5px solid transparent; outline-offset:-1.5px; }
+.work-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,0.1),0 2px 8px rgba(0,0,0,0.04); outline-color:var(--ink); }
 
 /* Deck spread animation */
 .work-grid.deck .work-card { opacity:0; transform:translate(var(--stack-x),var(--stack-y)) rotate(var(--stack-r)) scale(0.92); transition:transform .7s cubic-bezier(.16,1,.3,1),opacity .5s ease; }
