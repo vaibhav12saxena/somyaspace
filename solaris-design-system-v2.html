@@ -60,10 +60,6 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
 .hero-pipe-box { background:rgba(255,255,255,0.3); border:1px dashed var(--text2); border-radius:24px; padding:32px; font-size:20px; color:var(--text); text-align:center; }
 .hero-pipe-box.active { border-style:solid; border-color:var(--accent); }
 .hero-pipe-arrows { color:var(--accent); font-size:16px; letter-spacing:4px; }
-.hero-status { display:inline-flex; align-items:center; gap:8px; background:rgba(197,169,255,0.12); border:1px solid rgba(197,169,255,0.3); border-radius:24px; padding:8px 20px; margin-bottom:32px; }
-.hero-status-dot { width:8px; height:8px; border-radius:50%; background:#c5a9ff; animation:pulse 2s ease-in-out infinite; }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-.hero-status-text { font-size:14px; font-weight:500; color:var(--text2); letter-spacing:0.3px; }
 
 /* ═══ CONTRIBUTION ═══ */
 .contrib-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:32px; margin-top:48px; }
@@ -73,11 +69,12 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
 .contrib-desc { font-size:16px; font-weight:400; color:var(--text2); line-height:1.6; }
 
 /* ═══ THE NEED ═══ */
-.need-layout { display:grid; grid-template-columns:1fr 1fr; gap:48px; margin-top:48px; align-items:start; }
-.need-points { display:flex; flex-direction:column; gap:16px; }
+.need-points { display:flex; flex-direction:column; gap:16px; margin-top:48px; max-width:824px; }
 .need-point { background:var(--card-bg); border-radius:12px; padding:24px; display:flex; gap:16px; align-items:flex-start; }
 .need-point .diamond { font-size:20px; flex-shrink:0; margin-top:2px; }
 .need-point p { font-size:20px; color:var(--text); line-height:1.5; }
+.need-screenshot { position:absolute; right:160px; top:245px; width:624px; border-radius:16px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.08); }
+.need-screenshot img, .need-screenshot video { width:100%; display:block; }
 
 /* HMW */
 .hmw { background:var(--bg); text-align:center; padding:96px var(--px); }
@@ -112,44 +109,36 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
 .system-layer-title { font-family:'Ubuntu',sans-serif; font-size:24px; font-weight:700; color:var(--text); letter-spacing:1.2px; margin-bottom:12px; }
 .system-layer-desc { font-size:16px; color:var(--text2); margin-bottom:12px; }
 .system-layer-items { font-size:16px; font-weight:500; color:var(--text); }
-.system-container { border:1.5px dashed var(--text2); border-radius:24px; padding:48px 32px 32px; margin-top:48px; }
-.system-container .system-layers { margin-top:0; }
-.system-insight { font-size:20px; font-weight:500; font-style:italic; color:var(--text2); margin-top:32px; max-width:1200px; line-height:1.6; }
-.system-connector { display:flex; flex-direction:column; align-items:center; margin-top:0; padding:32px 0; }
-.system-connector-line { width:2px; height:64px; background:var(--text2); }
-.system-connector-arrow { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:10px solid var(--text2); margin-top:0; }
-.system-playbook { max-width:480px; margin:0 auto; padding:28px 32px; display:flex; flex-direction:column; gap:12px; }
-.system-playbook-title { font-family:'Ubuntu',sans-serif; font-size:24px; font-weight:700; color:var(--text); letter-spacing:1.2px; }
-.system-playbook-desc { font-size:16px; color:var(--text2); line-height:1.6; }
-.system-playbook-bold { font-size:16px; font-weight:700; color:var(--text); line-height:1.6; }
+.system-insight { font-size:20px; font-weight:500; color:var(--text); margin-top:32px; max-width:1200px; line-height:1.6; }
+.system-arrows { display:flex; gap:32px; justify-content:center; margin-top:16px; }
+.system-arrows span { font-size:24px; color:var(--accent); }
 
 /* ═══ AI READY ═══ */
 .ai-compare { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:48px; }
 .ai-card { padding:32px; }
-.ai-card.without-card { border:1.5px dashed var(--text2); box-shadow:none; }
-.ai-card.with-card { border:1.5px solid var(--accent); }
 .ai-card-label { font-size:14px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px; }
 .ai-card-label.without { color:var(--text2); }
 .ai-card-label.with { color:var(--accent); }
 .ai-card-flow { font-size:20px; font-weight:700; color:var(--text); margin-bottom:16px; }
 .ai-card-items { list-style:none; }
-.ai-card-items li { font-size:16px; padding:6px 0; }
-.ai-card.without-card .ai-card-items li { color:var(--text2); }
-.ai-card.with-card .ai-card-items li { color:#3a8c5c; }
+.ai-card-items li { font-size:16px; color:var(--text); padding:8px 0; }
 
 /* Playbook sub-section */
 .playbook-sub { margin-top:64px; }
 .playbook-sub h3 { font-family:'Buenard',serif; font-size:32px; font-weight:700; color:var(--text); margin-bottom:16px; }
-.playbook-sub > p { font-size:18px; color:var(--text); line-height:1.8; max-width:800px; margin-bottom:32px; }
-.playbook-flow { display:flex; gap:12px; align-items:center; justify-content:center; margin-bottom:48px; flex-wrap:wrap; }
-.playbook-flow-box { background:var(--card-bg); border:1px solid rgba(0,0,0,0.08); border-radius:10px; padding:12px 20px; font-size:16px; font-weight:500; color:var(--text); }
+.playbook-sub > p { font-size:18px; color:var(--text); line-height:1.8; max-width:1200px; margin-bottom:32px; }
+.playbook-flow { display:flex; gap:12px; align-items:center; justify-content:center; margin-bottom:32px; flex-wrap:wrap; }
+.playbook-flow-box { background:var(--card-bg); border-radius:10px; padding:12px 20px; font-size:16px; font-weight:500; color:var(--text); }
 .playbook-flow-box.active { border:1.5px solid var(--accent); font-weight:700; }
-.playbook-flow-arrow { color:var(--text2); font-size:16px; }
-.playbook-bottom { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:0; align-items:center; }
-.playbook-bottom-card { padding:28px; min-height:220px; display:flex; flex-direction:column; justify-content:flex-start; }
-.playbook-bottom-card code { font-size:15px; color:var(--text2); font-family:'Ubuntu',sans-serif; display:block; line-height:2; }
-.playbook-bottom-card .code-block { font-family:'Ubuntu Mono',monospace; font-size:14px; color:var(--text); line-height:1.8; }
-.playbook-connector { text-align:center; color:var(--text2); font-size:14px; letter-spacing:2px; padding:0 8px; }
+.playbook-flow-arrow { color:var(--accent); font-size:20px; }
+.playbook-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+.playbook-card { padding:24px 28px; display:flex; flex-direction:column; gap:12px; }
+.playbook-card h4 { font-size:20px; font-weight:700; color:var(--text); }
+.playbook-card p { font-size:16px; color:var(--text2); line-height:1.6; }
+.token-flow-boxes { display:flex; gap:16px; margin-top:32px; flex-wrap:wrap; }
+.token-flow-box { background:var(--card-bg); border-radius:10px; padding:14px 24px; }
+.token-flow-box .layer { font-size:14px; font-weight:700; color:var(--accent); letter-spacing:0.05em; text-transform:uppercase; margin-bottom:4px; }
+.token-flow-box code { font-size:15px; color:var(--text); font-family:'Ubuntu',sans-serif; }
 
 /* ═══ CONTEXT LAYER ═══ */
 .context-grid { display:grid; grid-template-columns:480px 1fr; gap:64px; margin-top:48px; }
@@ -162,40 +151,25 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
 .context-insight { font-size:20px; color:var(--text); margin-top:32px; max-width:800px; }
 
 /* ═══ TWO INTERFACES ═══ */
-.arch-tree { margin-top:48px; position:relative; }
-.arch-source { background:var(--card-bg); border:1.5px solid var(--accent); border-radius:12px; padding:16px 28px; font-size:18px; font-weight:700; color:var(--text); letter-spacing:1px; display:inline-block; }
-.arch-trunk { width:2px; height:48px; background:var(--accent); margin-left:48px; }
-.arch-section { display:flex; gap:0; margin-bottom:48px; position:relative; overflow:visible; }
-.arch-line-col { width:100px; flex-shrink:0; position:relative; overflow:visible; }
-.arch-vline { position:absolute; left:48px; top:0; width:2px; background:var(--accent); opacity:0.4; height:calc(100% + 48px); }
-.arch-section:last-child .arch-vline { display:none; }
-.arch-hline { position:absolute; left:48px; top:32px; width:52px; height:2px; background:var(--accent); opacity:0.4; }
-.arch-dot { position:absolute; left:44px; top:28px; width:10px; height:10px; border-radius:50%; background:var(--accent); }
-.arch-content-col { flex:1; min-width:0; }
+.arch-diagram { display:flex; flex-direction:column; align-items:center; margin-top:48px; gap:0; }
+.arch-source { background:var(--card-bg); border:1.5px solid var(--accent); border-radius:12px; padding:16px 28px; font-size:18px; font-weight:700; color:var(--text); letter-spacing:1px; }
+.arch-connector { color:var(--accent); font-size:20px; line-height:1.4; text-align:center; }
+.arch-branches { display:grid; grid-template-columns:1fr 1fr; gap:48px; width:100%; margin-top:16px; }
+.arch-branch { display:flex; flex-direction:column; gap:16px; }
 .arch-branch-card { padding:28px 32px; display:flex; flex-direction:column; gap:16px; }
-.arch-branch-label { font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent); text-transform:uppercase; }
+.arch-branch-label { font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent); }
 .arch-branch-label.md { color:var(--text2); }
 .arch-branch-title { font-family:'Buenard',serif; font-size:24px; font-weight:700; color:var(--text); }
 .arch-branch-desc { font-size:16px; color:var(--text2); line-height:1.6; }
 .arch-branch-bold { font-size:16px; font-weight:700; color:var(--text); }
-.arch-audience { display:inline-block; background:rgba(0,0,0,0.03); border-radius:10px; padding:8px 20px; font-size:16px; font-weight:500; color:var(--text2); margin-top:12px; }
+.arch-audience { background:rgba(0,0,0,0.03); border-radius:10px; padding:12px 24px; text-align:center; font-size:18px; font-weight:500; color:var(--text); }
 .arch-branch-card.playbook { border:1.5px solid var(--accent); }
-.arch-screenshots { display:flex; flex-direction:column; gap:24px; margin-top:24px; }
-.arch-screenshots .screenshot-box { border-radius:var(--card-radius); overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08); background:#fff; }
-.arch-screenshots .screenshot-box img { width:100%; display:block; }
-.arch-screenshots-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-.arch-screenshots-row .screenshot-box img { width:100%; display:block; }
-.arch-insight { font-size:20px; font-weight:500; font-style:italic; color:var(--text2); line-height:1.8; max-width:1400px; margin-top:48px; }
+.arch-insight { font-size:20px; font-weight:500; font-style:italic; color:var(--text2); line-height:1.8; max-width:1400px; margin-top:48px; text-align:center; }
 
 /* Screenshots */
 .screenshot-row { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:32px; }
 .screenshot-box { border-radius:var(--card-radius); overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08); background:#fff; }
 .screenshot-box img, .screenshot-box video { width:100%; display:block; }
-
-/* Need section videos */
-.need-screens { display:flex; flex-direction:column; gap:24px; }
-.need-screen-card { border-radius:var(--card-radius); overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,0.08); background:#fff; }
-.need-screen-card img, .need-screen-card video { width:100%; display:block; }
 
 /* ═══ LEARNED ═══ */
 .learned-cards { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:48px; }
@@ -223,18 +197,12 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
   .hero-subtitle { font-size:24px; }
   .sec-title { font-size:36px; }
   .contrib-grid { grid-template-columns:1fr; }
-  .shift-grid, .ai-compare, .learned-cards, .screenshot-row, .audit-findings { grid-template-columns:1fr; }
-  .playbook-bottom { grid-template-columns:1fr; gap:16px; }
-  .playbook-connector { transform:rotate(90deg); }
-  .need-layout { grid-template-columns:1fr; }
-  .arch-line-col { width:48px; }
-  .arch-vline { left:24px; }
-  .arch-hline { left:24px; width:24px; }
-  .arch-dot { left:20px; }
+  .shift-grid, .ai-compare, .arch-branches, .learned-cards, .screenshot-row, .audit-findings { grid-template-columns:1fr; }
   .audit-cats { grid-template-columns:1fr; }
   .system-layers { grid-template-columns:1fr; }
   .playbook-cards { grid-template-columns:1fr; }
   .context-grid { grid-template-columns:1fr; }
+  .need-screenshot { position:static; width:100%; margin-top:32px; }
   .hero-pipeline { flex-direction:column; }
   .hero-pipe-arrows { transform:rotate(90deg); }
 }
@@ -271,10 +239,6 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
       <span>3 designers</span>
       <span class="diamond">&#10022;</span>
       <span>Enphase Energy</span>
-    </div>
-    <div class="hero-status">
-      <span class="hero-status-dot"></span>
-      <span class="hero-status-text">In progress: Refining code components, testing and refining outputs</span>
     </div>
     <div class="hero-pipeline">
       <div class="hero-pipe-box">Figma Components</div>
@@ -321,34 +285,24 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
   <div class="sec-inner">
     <p class="sec-label reveal">the need</p>
     <h2 class="sec-title reveal" style="max-width:900px;">Every new feature was creating more UI debt.</h2>
-    <div class="need-layout reveal">
-      <div class="need-points">
-        <div class="need-point">
-          <span class="diamond">&#10022;</span>
-          <p>Current design system was not scalable. Designers had to detach components to use them.</p>
-        </div>
-        <div class="need-point">
-          <span class="diamond">&#10022;</span>
-          <p>5 different whites, 12 different greys. No clear source of truth for color decisions.</p>
-        </div>
-        <div class="need-point">
-          <span class="diamond">&#10022;</span>
-          <p>AI tools were being adopted across PM and UX teams for rapid prototyping and stakeholder reviews. But without a shared design language in code, every AI generated prototype looked different from the actual product.</p>
-        </div>
+    <div class="need-points reveal">
+      <div class="need-point">
+        <span class="diamond">&#10022;</span>
+        <p>Current design system was not scalable. Designers had to detach components to use them.</p>
       </div>
-      <div class="need-screens">
-        <div class="need-screen-card">
-          <video autoplay loop muted playsinline>
-            <source src="Images/solaris/need-video-1.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="need-screen-card">
-          <video autoplay loop muted playsinline>
-            <source src="Images/solaris/need-video-2.mp4" type="video/mp4">
-          </video>
-        </div>
+      <div class="need-point">
+        <span class="diamond">&#10022;</span>
+        <p>5 different whites, 12 different greys. No clear source of truth for color decisions.</p>
+      </div>
+      <div class="need-point">
+        <span class="diamond">&#10022;</span>
+        <p>AI tools were being adopted across PM and UX teams for rapid prototyping and stakeholder reviews. But without a shared design language in code, every AI generated prototype looked different from the actual product.</p>
       </div>
     </div>
+    <div class="need-screenshot reveal" style="margin-top:32px; position:relative; max-width:624px; float:right;">
+      <img src="Images/solaris/need-screen-2.png" alt="Solargraf product screenshot showing UI inconsistency">
+    </div>
+    <div style="clear:both;"></div>
   </div>
 </section>
 
@@ -436,127 +390,31 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
     <p class="sec-label reveal">the system</p>
     <h2 class="sec-title reveal">Solaris became a shared language for Solargraf.</h2>
     <p class="sec-desc reveal">The system was structured around three layers:</p>
-    <div class="system-container reveal">
-      <div class="system-layers">
-        <div class="card system-layer">
-          <div class="system-layer-num">01</div>
-          <div class="system-layer-title">BRAND</div>
-          <div class="system-layer-desc">The visual building blocks.</div>
-          <div class="system-layer-items">Colors · Typography · Radius · Spacing</div>
-        </div>
-        <div class="card system-layer">
-          <div class="system-layer-num">02</div>
-          <div class="system-layer-title">SEMANTIC</div>
-          <div class="system-layer-desc">Meaning and intent.</div>
-          <div class="system-layer-items">Primary action · Surface · Text · Border · Feedback</div>
-        </div>
-        <div class="card system-layer">
-          <div class="system-layer-num">03</div>
-          <div class="system-layer-title">COMPONENT</div>
-          <div class="system-layer-desc">How those decisions are consumed by UI.</div>
-          <div class="system-layer-items">Button · Input · Card · Form · Table</div>
-        </div>
+    <div class="system-layers reveal">
+      <div class="card system-layer">
+        <div class="system-layer-num">01</div>
+        <div class="system-layer-title">BRAND</div>
+        <div class="system-layer-desc">The visual building blocks.</div>
+        <div class="system-layer-items">Colors · Typography · Radius · Spacing</div>
       </div>
-      <p class="system-insight">Brand defines what we have. Semantic tokens define what it means. Components define how the system behaves.</p>
-    </div>
-    <div class="system-connector reveal">
-      <div class="system-connector-line"></div>
-      <span class="system-connector-arrow"></span>
-    </div>
-    <div class="card system-playbook reveal">
-      <div class="system-playbook-title">AI PLAYBOOK</div>
-      <p class="system-playbook-desc">Structured rules for AI-assisted development using Solaris.</p>
-      <p class="system-playbook-bold">Defines what AI should reuse, what it should avoid creating, and how it should handle gaps in the system.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ 08 TOKENS ═══ -->
-<section class="sec">
-  <div class="sec-inner">
-    <p class="sec-label reveal">tokens</p>
-    <h2 class="sec-title reveal">From raw values to meaningful decisions.</h2>
-    <p class="sec-desc reveal">Instead of scattering visual values across the product, we established a structured token system.</p>
-    <div class="system-layers reveal" style="margin-top:48px; align-items:stretch;">
-      <div style="display:flex; flex-direction:column; gap:16px; height:100%;">
-        <div class="card system-layer" style="flex:1;">
-          <div class="system-layer-title" style="font-size:20px;">Brand tokens</div>
-          <div style="background:var(--bg); border-radius:8px; padding:16px; margin:12px 0; font-size:15px; color:var(--text2); line-height:2;">
-            blue-400<br>gray-100<br>spacing-4<br>radius-md
-          </div>
-          <div class="system-layer-desc" style="font-style:italic;">Raw, named values. The building blocks.</div>
-        </div>
-        <img src="Images/solaris/tokens-brand-ss.png" alt="Brand token variables in Figma" style="width:100%; border-radius:12px; display:block;">
+      <div class="card system-layer">
+        <div class="system-layer-num">02</div>
+        <div class="system-layer-title">SEMANTIC</div>
+        <div class="system-layer-desc">Meaning and intent.</div>
+        <div class="system-layer-items">Primary action · Surface · Text · Border · Feedback</div>
       </div>
-      <div style="display:flex; flex-direction:column; gap:16px; height:100%; position:relative;">
-        <div style="position:absolute; left:-24px; top:35%; color:var(--accent); font-size:20px;">→</div>
-        <div class="card system-layer" style="flex:1;">
-          <div class="system-layer-title" style="font-size:20px;">Semantic tokens</div>
-          <div style="background:var(--bg); border-radius:8px; padding:16px; margin:12px 0; font-size:15px; color:var(--text2); line-height:2;">
-            action-primary<br>surface-default<br>text-secondary<br>border-default
-          </div>
-          <div class="system-layer-desc" style="font-style:italic;">Intent-based assignments. What it means.</div>
-        </div>
-        <img src="Images/solaris/tokens-semantic-ss.png" alt="Semantic token mappings in Figma" style="width:100%; border-radius:12px; display:block;">
-      </div>
-      <div style="display:flex; flex-direction:column; gap:16px; height:100%;">
-        <div class="card system-layer" style="flex:1;">
-          <div class="system-layer-title" style="font-size:20px;">Component usage</div>
-          <div style="background:var(--bg); border-radius:8px; padding:16px; margin:12px 0; font-size:15px; color:var(--text2); line-height:2;">
-            button-primary<br>input-border<br>card-padding
-          </div>
-          <div class="system-layer-desc" style="font-style:italic;">How tokens are consumed by components.</div>
-        </div>
-        <img src="Images/solaris/tokens-component-ss.png" alt="Component token usage in Figma" style="width:100%; border-radius:12px; display:block;">
+      <div class="card system-layer">
+        <div class="system-layer-num">03</div>
+        <div class="system-layer-title">COMPONENT</div>
+        <div class="system-layer-desc">How those decisions are consumed by UI.</div>
+        <div class="system-layer-items">Button · Input · Card · Form · Table</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ═══ 09 COMPONENTS ═══ -->
-<section class="sec">
-  <div class="sec-inner">
-    <p class="sec-label reveal">components</p>
-    <h2 class="sec-title reveal">From reusable styles to reusable decisions.</h2>
-    <p class="sec-desc reveal">I translated the token system into a scalable component library with defined variants, states, sizes, properties, and behaviors. Components use Figma slots to define where child elements can be placed, making layouts composable and predictable for both designers and AI agents.</p>
-    <div class="reveal" style="margin-top:48px;">
-      <img src="Images/solaris/components-slots.png" alt="Component library showing form layout with slot indicators for composable structure" style="width:100%; border-radius:12px; display:block;">
+    <div class="system-arrows reveal">
+      <span>&darr;</span>
+      <span>&darr;</span>
     </div>
-  </div>
-</section>
-
-<!-- ═══ 11 DESIGN → CODE ═══ -->
-<section class="sec">
-  <div class="sec-inner">
-    <p class="sec-label reveal">design &rarr; code</p>
-    <h2 class="sec-title reveal">A component shouldn't stop at Figma.</h2>
-    <p class="sec-desc reveal">The next step was connecting the design language to implementation. Reduce interpretation between what is designed and what gets built.</p>
-    <div class="system-layers reveal" style="margin-top:48px;">
-      <div class="card" style="padding:28px; display:flex; flex-direction:column; gap:16px;">
-        <div style="font-size:20px; font-weight:700; color:var(--text);">Button</div>
-        <div style="font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent);">FIGMA</div>
-        <div style="background:var(--bg); border-radius:8px; padding:12px 16px; font-size:15px; color:var(--text2);">Button / Primary / Medium</div>
-        <div style="text-align:center; color:var(--text2);">⋮</div>
-        <div style="font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent);">CODE</div>
-        <div style="background:var(--bg); border-radius:8px; padding:12px 16px; font-size:15px; color:var(--text2); font-family:'Ubuntu Mono',monospace;">&lt;Button variant="primary" size="medium" /&gt;</div>
-      </div>
-      <div class="card" style="padding:28px; display:flex; flex-direction:column; gap:16px;">
-        <div style="font-size:20px; font-weight:700; color:var(--text);">Input</div>
-        <div style="font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent);">FIGMA</div>
-        <div style="background:var(--bg); border-radius:8px; padding:12px 16px; font-size:15px; color:var(--text2);">Input / Text / Default</div>
-        <div style="text-align:center; color:var(--text2);">⋮</div>
-        <div style="font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent);">CODE</div>
-        <div style="background:var(--bg); border-radius:8px; padding:12px 16px; font-size:15px; color:var(--text2); font-family:'Ubuntu Mono',monospace;">&lt;Input type="text" state="default" /&gt;</div>
-      </div>
-      <div class="card" style="padding:28px; display:flex; flex-direction:column; gap:16px;">
-        <div style="font-size:20px; font-weight:700; color:var(--text);">Table</div>
-        <div style="font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent);">FIGMA</div>
-        <div style="background:var(--bg); border-radius:8px; padding:12px 16px; font-size:15px; color:var(--text2);">Table / Bordered / Compact</div>
-        <div style="text-align:center; color:var(--text2);">⋮</div>
-        <div style="font-size:14px; font-weight:700; letter-spacing:0.1em; color:var(--accent);">CODE</div>
-        <div style="background:var(--bg); border-radius:8px; padding:12px 16px; font-size:15px; color:var(--text2); font-family:'Ubuntu Mono',monospace;">&lt;Table variant="bordered" density="compact" /&gt;</div>
-      </div>
-    </div>
+    <p class="system-insight reveal">Brand defines what we have. Semantic tokens define what it means. Components define how the system behaves.</p>
   </div>
 </section>
 
@@ -567,7 +425,7 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
     <h2 class="sec-title reveal">What happens when the builder is AI?</h2>
     <p class="sec-desc reveal">AI can generate a UI in seconds. But without product context, it also invents new colors, new spacing, new components, and new interaction patterns. So the design system needed to become machine-readable, not just human-readable.</p>
     <div class="ai-compare reveal">
-      <div class="card ai-card without-card">
+      <div class="card ai-card">
         <div class="ai-card-label without">WITHOUT CONTEXT</div>
         <div class="ai-card-flow">Prompt &rarr; AI &rarr; Generic UI</div>
         <ul class="ai-card-items">
@@ -577,7 +435,7 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
           <li>&#10005; New interaction patterns</li>
         </ul>
       </div>
-      <div class="card ai-card with-card">
+      <div class="card ai-card">
         <div class="ai-card-label with">WITH SOLARIS</div>
         <div class="ai-card-flow">Prompt &rarr; Solaris context &rarr; Solargraf UI</div>
         <ul class="ai-card-items">
@@ -599,17 +457,31 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
         <span class="playbook-flow-arrow">&rarr;</span>
         <div class="playbook-flow-box">Engineers + AI</div>
       </div>
-      <div class="playbook-bottom">
-        <div class="card playbook-bottom-card">
-          <code>Brand tokens<br>&darr;<br>Semantic tokens<br>&darr;<br>Component tokens<br>&darr;<br>React components</code>
+      <div class="token-flow-boxes">
+        <div class="card token-flow-box">
+          <div class="layer">Brand tokens</div>
+          <code>&darr;</code>
         </div>
-        <div class="playbook-connector">&middot;&middot;&middot;&rarr;</div>
-        <div class="card playbook-bottom-card">
-          <code>brand.blue.500<br>&darr;<br>semantic.action.primary<br>&darr;<br>button.primary.background</code>
+        <div class="card token-flow-box">
+          <div class="layer">Semantic tokens</div>
+          <code>&darr;</code>
         </div>
-        <div class="playbook-connector">&middot;&middot;&middot;&rarr;</div>
-        <div class="card playbook-bottom-card">
-          <span class="code-block">&lt;Button variant="primary"&gt;<br>&nbsp;&nbsp;Save<br>&lt;/Button&gt;</span>
+        <div class="card token-flow-box">
+          <div class="layer">Component tokens</div>
+          <code>&darr;</code>
+        </div>
+        <div class="card token-flow-box">
+          <div class="layer">React components</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:32px;">
+        <div class="card token-flow-box" style="padding:24px;">
+          <div class="layer" style="margin-bottom:8px;">Token chain</div>
+          <code style="display:block; line-height:2;">brand.blue.500<br>&darr;<br>semantic.action.primary<br>&darr;<br>button.primary.background</code>
+        </div>
+        <div class="card token-flow-box" style="padding:24px;">
+          <div class="layer" style="margin-bottom:8px;">Code output</div>
+          <code style="display:block; line-height:2;">&lt;Button variant="primary"&gt;<br>&nbsp;&nbsp;Save<br>&lt;/Button&gt;</code>
         </div>
       </div>
     </div>
@@ -666,62 +538,42 @@ body { font-family:'Ubuntu',sans-serif; background:var(--bg); color:var(--text);
     <h2 class="sec-title reveal">Two interfaces. One system.</h2>
     <p class="sec-desc reveal">Different people consume a design system differently. A PM shouldn't need to read Markdown. An AI agent shouldn't rely on visual browsing. So Solaris has two consumption layers built from the same source.</p>
 
-    <div class="arch-tree reveal">
+    <div class="arch-diagram reveal">
       <div class="arch-source">SOLARIS SOURCE</div>
-      <div class="arch-trunk"></div>
+      <div class="arch-connector">│<br>┌──────────────────────┴──────────────────────┐</div>
+    </div>
 
-      <!-- React Playbook branch -->
-      <div class="arch-section">
-        <div class="arch-line-col">
-          <div class="arch-vline"></div>
-          <div class="arch-dot"></div>
-          <div class="arch-hline"></div>
+    <div class="arch-branches reveal">
+      <div class="arch-branch">
+        <div class="arch-connector" style="text-align:center;">&darr;</div>
+        <div class="card arch-branch-card playbook">
+          <div class="arch-branch-label">REACT PLAYBOOK</div>
+          <div class="arch-branch-title">The human-facing interface</div>
+          <p class="arch-branch-desc">A living React application where every Figma component is replicated in code with its full set of variants. Designers and PMs can browse components, see usage patterns, and understand what the system offers without reading documentation files.</p>
+          <p class="arch-branch-bold">Makes things discoverable.</p>
         </div>
-        <div class="arch-content-col">
-          <div class="card arch-branch-card playbook">
-            <div class="arch-branch-label">REACT PLAYBOOK</div>
-            <div class="arch-branch-title">The human-facing interface</div>
-            <p class="arch-branch-desc">A living React application where every Figma component is replicated in code with its full set of variants. Designers and PMs can browse components, see usage patterns, and understand what the system offers without reading documentation files.</p>
-            <p class="arch-branch-bold">Makes things discoverable.</p>
-          </div>
-          <div class="arch-audience">Designers · PMs</div>
-          <div class="arch-screenshots">
-            <div class="screenshot-box">
-              <img src="Images/solaris/playbook-full.png" alt="React Playbook showing Input component with variants, states, interactive controls, and live code">
-            </div>
-            <div class="screenshot-box">
-              <img src="Images/solaris/playbook-scroll.png" alt="React Playbook showing Button component variants with code snippets">
-            </div>
-          </div>
-        </div>
+        <div class="arch-connector" style="text-align:center;">&darr;</div>
+        <div class="arch-audience">Designers · PMs</div>
       </div>
+      <div class="arch-branch">
+        <div class="arch-connector" style="text-align:center;">&darr;</div>
+        <div class="card arch-branch-card">
+          <div class="arch-branch-label md">MARKDOWN FILES</div>
+          <div class="arch-branch-title">The machine-readable layer</div>
+          <p class="arch-branch-desc">Structured Markdown documentation that captures what a component looks like, when to use it, and how it behaves. Each file follows a consistent schema so AI agents can parse and apply the rules without ambiguity.</p>
+          <p class="arch-branch-bold">Makes things machine-readable and precise.</p>
+        </div>
+        <div class="arch-connector" style="text-align:center;">&darr;</div>
+        <div class="arch-audience">Developers · AI Agents</div>
+      </div>
+    </div>
 
-      <!-- Markdown Files branch -->
-      <div class="arch-section" style="margin-bottom:0;">
-        <div class="arch-line-col">
-          <div class="arch-dot"></div>
-          <div class="arch-hline"></div>
-        </div>
-        <div class="arch-content-col">
-          <div class="card arch-branch-card">
-            <div class="arch-branch-label md">MARKDOWN FILES</div>
-            <div class="arch-branch-title">The machine-readable layer</div>
-            <p class="arch-branch-desc">Structured Markdown documentation that captures what a component looks like, when to use it, and how it behaves. Each file follows a consistent schema so AI agents can parse and apply the rules without ambiguity.</p>
-            <p class="arch-branch-bold">Makes things machine-readable and precise.</p>
-          </div>
-          <div class="arch-audience">Developers · AI Agents</div>
-          <div class="arch-screenshots">
-            <div class="screenshot-box">
-              <img src="Images/solaris/md-button.png" alt="Content guidance Markdown file with direct, task-oriented label rules">
-            </div>
-            <div class="screenshot-box">
-              <img src="Images/solaris/md-input.png" alt="Typography guidelines Markdown file with font family and weight rules">
-            </div>
-            <div class="screenshot-box">
-              <img src="Images/solaris/md-forms.png" alt="Forms pattern Markdown file with purpose, composition, do/don't rules, accessibility, tokens, and React example">
-            </div>
-          </div>
-        </div>
+    <div class="screenshot-row reveal">
+      <div class="screenshot-box">
+        <img src="Images/solaris/context-1.png" alt="React Playbook showing Input component with variants, states, and live code">
+      </div>
+      <div class="screenshot-box">
+        <img src="Images/solaris/context-7.png" alt="Markdown documentation for Forms pattern with structured sections">
       </div>
     </div>
 

@@ -68,12 +68,13 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
 .work-card-desc { font-family:'Ubuntu',sans-serif; font-size:17px; font-weight:400; color:var(--ink2); line-height:1.55; }
 .work-card-stats { display:flex; flex-wrap:wrap; gap:16px; align-items:center; }
 .work-card-stat { font-size:15px; font-weight:700; background:rgba(0,0,0,0.04); padding:6px 14px; border-radius:8px; letter-spacing:0.2px; }
-.card-green { background:linear-gradient(135deg,#e6ffd0 0%,#f2ffe6 100%); }
-.card-red { background:linear-gradient(135deg,#ffe1e1 0%,#fff0f0 100%); }
-.card-orange { background:linear-gradient(135deg,#fff0e0 0%,#fff8f0 100%); }
-.card-purple { background:linear-gradient(135deg,#e9dfff 0%,#f3efff 100%); }
-.card-yellow { background:linear-gradient(135deg,#ffffca 0%,#fffff0 100%); }
-.card-blue { background:linear-gradient(135deg,#dff0ff 0%,#eef6ff 100%); }
+.card-green { background:linear-gradient(135deg,#c8f0a0 0%,#e4ffd4 50%,#f0ffe8 100%); }
+.card-red { background:linear-gradient(135deg,#dcc8ff 0%,#ece0ff 40%,#ddeeff 100%); }
+.card-orange { background:linear-gradient(135deg,#ffddb3 0%,#fff0d6 50%,#fff8ee 100%); }
+.card-purple { background:linear-gradient(135deg,#d4c0ff 0%,#e6d8ff 50%,#f0eaff 100%); }
+.card-pink { background:linear-gradient(135deg,#ffc8d6 0%,#ffdde6 50%,#fff0f4 100%); }
+.card-yellow { background:linear-gradient(135deg,#fff3a0 0%,#fffbd0 50%,#fffef0 100%); }
+.card-blue { background:linear-gradient(135deg,#b8dcff 0%,#d8ecff 50%,#eef6ff 100%); }
 
 /* Project preview in card */
 .work-card-preview { width:100%; border-radius:12px; overflow:hidden; border:1.5px solid rgba(0,0,0,0.1); background:#fff; margin-top:8px; box-shadow:0 4px 24px rgba(0,0,0,0.08); }
@@ -267,19 +268,19 @@ a, button, [role="button"], .work-card, .sketch-leaf, .nav-label-slot, .nav-char
       <div class="work-card-header">
         <div class="work-card-title">SolarIS Design System</div>
         <div class="work-card-tags">
+          <span class="work-card-tag" style="background:rgba(139,92,246,0.12);color:#7c3aed;">AI Powered</span>
+          <span class="work-card-tag">Design System</span>
           <span class="work-card-tag">Enterprise SaaS</span>
-          <span class="work-card-tag">Workflow Design</span>
-          <span class="work-card-tag">Design Tool</span>
           <span class="work-card-tag">B2B</span>
         </div>
       </div>
       <div class="work-card-divider"></div>
-      <p class="work-card-desc">Building the design system for Solargraf using token architecture.</p>
+      <p class="work-card-desc">An AI first design system built with structured tokens, a React playbook, and machine readable documentation so both humans and AI agents build from the same source of truth.</p>
       <div class="work-card-preview" style="border:none;box-shadow:none;">
         <img src="Images/solaris-preview.png" alt="Solargraf design system preview" style="border-radius:12px;">
       </div>
     </a>
-    <a href="ar-troubleshooting-guide.html" target="_blank" class="work-card card-purple">
+    <a href="ar-troubleshooting-guide.html" target="_blank" class="work-card card-pink">
       <div class="work-card-header">
         <div class="work-card-title">AR-powered Self Troubleshooting Guide</div>
         <div class="work-card-tags">

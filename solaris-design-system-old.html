@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris 2.0 Design System · Case Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --bg: #faf7ff; --bg2: #f3eefa; --bg3: #ede5f5;
+  --surface: #e0d4f0; --surface2: #d0c0e8;
+  --text: #1e1230; --text2: #524168; --text3: #8a7a9e;
+  --accent: #9b59b6; --accent2: #7b3f96;
+  --accent-pink: #e056a0; --accent-mix: #b84dab;
+  --accent-dim: rgba(155,89,182,0.08); --accent-light: rgba(155,89,182,0.12);
+  --grad-hero: linear-gradient(135deg, #faf7ff 0%, #f0e6ff 40%, #fce4f0 100%);
+  --grad-section: linear-gradient(180deg, #f3eefa 0%, #faf7ff 100%);
+  --grad-accent: linear-gradient(135deg, #9b59b6, #e056a0);
+  --dark: #f3eefa;
+  --border: 1px solid rgba(30,18,48,0.08);
+  --radius: 16px; --radius-sm: 10px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body { font-family:'Inria Sans',sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; line-height:1.7; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--accent); }
+
+.top-bar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 48px; height:56px; background:rgba(250,247,255,0.92); backdrop-filter:blur(16px); border-bottom:var(--border); }
+.top-bar a { color:var(--text2); text-decoration:none; font-size:13px; transition:color var(--transition); }
+.top-bar a:hover { color:var(--accent); }
+.top-bar .back-link { font-weight:700; display:flex; align-items:center; gap:6px; color:var(--text); }
+.nav-links { display:flex; gap:24px; }
+.scroll-progress { position:fixed; top:56px; left:0; height:2px; background:var(--grad-accent); z-index:101; width:0; transition:width 0.1s linear; }
+
+.case-section { padding:96px 48px; max-width:1200px; margin:0 auto; }
+.section-label { display:flex; align-items:center; gap:12px; font-size:12px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; }
+.section-label-line { width:32px; height:2px; background:var(--accent); }
+.section-title { font-size:clamp(24px,3vw,36px); font-weight:800; line-height:1.2; margin-bottom:16px; color:var(--text); }
+.section-body { font-size:16px; color:var(--text2); max-width:720px; }
+.section-body p { margin-bottom:16px; }
+
+.hero-section { min-height:70vh; display:flex; flex-direction:column; justify-content:center; padding-top:120px; background:var(--grad-hero); }
+.hero-tag { font-size:12px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.hero-title { font-family:'Montserrat',sans-serif; font-size:clamp(40px,5vw,56px); font-weight:800; line-height:1.1; margin-bottom:8px; color:var(--text); }
+.hero-subtitle { font-family:'Montserrat',sans-serif; font-size:clamp(18px,2.5vw,28px); font-weight:300; color:var(--text2); margin-bottom:32px; }
+.hero-divider { width:100%; height:2px; background:var(--grad-accent); margin:32px 0; border-radius:1px; opacity:0.3; }
+.hero-meta { display:flex; gap:32px; flex-wrap:wrap; font-size:14px; color:var(--text3); margin-bottom:48px; }
+.hero-meta-item { display:flex; flex-direction:column; gap:4px; }
+.hero-meta-label { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--text3); }
+.hero-meta-value { font-size:16px; font-weight:600; color:var(--text); }
+
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-top:32px; }
+.info-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:28px; display:flex; flex-direction:column; gap:8px; transition:all var(--transition); }
+.info-card:hover { border-color:rgba(155,89,182,0.25); box-shadow:0 4px 24px rgba(155,89,182,0.08); }
+.info-card-icon { font-size:24px; margin-bottom:4px; }
+.info-card-title { font-size:16px; font-weight:700; color:var(--text); }
+.info-card-desc { font-size:14px; color:var(--text2); line-height:1.6; }
+.info-card-num { font-size:32px; font-weight:800; color:var(--accent); }
+
+.highlight-box { background:linear-gradient(135deg, rgba(155,89,182,0.06), rgba(224,86,160,0.06)); border-left:3px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0; padding:20px 24px; font-size:15px; color:var(--text2); line-height:1.7; }
+
+.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:32px; }
+.compare-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:28px; box-shadow:0 2px 12px rgba(155,89,182,0.04); }
+.compare-label { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:16px; }
+.compare-label.before { color:#e05555; }
+.compare-label.after { color:var(--accent); }
+.compare-item { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+.compare-item span:first-child { flex-shrink:0; font-size:16px; }
+.compare-item span:last-child { font-size:14px; color:var(--text2); }
+
+.full-width-section { background:var(--grad-section); padding:96px 0; border-top:var(--border); border-bottom:var(--border); }
+.full-width-section .case-section { padding-top:0; padding-bottom:0; }
+
+/* Token diagram */
+.token-diagram { margin-top:48px; display:flex; flex-direction:column; gap:0; }
+.token-tier { background:var(--bg2); border:var(--border); padding:32px; position:relative; box-shadow:0 2px 12px rgba(155,89,182,0.04); }
+.token-tier:first-child { border-radius:var(--radius) var(--radius) 0 0; }
+.token-tier:last-child { border-radius:0 0 var(--radius) var(--radius); }
+.token-tier-label { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.token-tier-title { font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.token-tier-desc { font-size:14px; color:var(--text2); line-height:1.6; margin-bottom:16px; }
+.token-examples { display:flex; flex-wrap:wrap; gap:8px; }
+.token-chip { background:var(--bg3); border:1px solid rgba(30,18,48,0.08); border-radius:6px; padding:6px 14px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:8px; }
+.token-chip .swatch { width:14px; height:14px; border-radius:4px; border:1px solid rgba(30,18,48,0.1); flex-shrink:0; }
+.token-arrow { text-align:center; padding:8px 0; font-size:20px; color:var(--accent); }
+
+/* Audit findings */
+.audit-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-top:32px; }
+.audit-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:24px; }
+.audit-card-icon { font-size:28px; margin-bottom:12px; }
+.audit-card-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.audit-card-desc { font-size:13px; color:var(--text2); line-height:1.5; }
+
+/* Component breakdown */
+.component-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:32px; }
+.component-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:28px; text-align:center; transition:all var(--transition); }
+.component-card:hover { border-color:rgba(155,89,182,0.25); box-shadow:0 4px 24px rgba(155,89,182,0.08); }
+.component-card-type { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+.component-card-num { font-size:40px; font-weight:800; color:var(--text); line-height:1; margin-bottom:8px; }
+.component-card-label { font-size:15px; font-weight:700; color:var(--text); margin-bottom:8px; }
+.component-card-list { font-size:13px; color:var(--text2); line-height:1.8; text-align:left; padding-left:16px; }
+
+.img-wrap { margin-top:48px; position:relative; border-radius:var(--radius); overflow:hidden; border:var(--border); background:#fff; box-shadow:0 4px 24px rgba(155,89,182,0.06); }
+.img-wrap img { width:100%; display:block; }
+.img-label { position:absolute; top:16px; left:16px; background:rgba(155,89,182,0.15); color:var(--accent2); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; padding:6px 14px; border-radius:8px; letter-spacing:0.04em; backdrop-filter:blur(8px); border:1px solid rgba(155,89,182,0.15); }
+.img-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:32px; }
+.img-row img { width:100%; border-radius:var(--radius); border:var(--border); box-shadow:0 8px 32px rgba(155,89,182,0.08); }
+.img-caption { font-size:12px; color:var(--text3); margin-top:10px; font-family:'Montserrat',sans-serif; text-align:center; }
+.slot-diagram { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:32px; }
+.slot-card { background:linear-gradient(135deg, var(--bg2), var(--bg3)); border:1px dashed rgba(155,89,182,0.25); border-radius:var(--radius-sm); padding:20px; text-align:center; transition:all var(--transition); }
+.slot-card:hover { border-color:var(--accent); background:var(--accent-dim); }
+.slot-card-name { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+.slot-card-content { font-size:13px; color:var(--text2); line-height:1.5; }
+.deep-dive-sub { font-size:14px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; margin-top:48px; margin-bottom:12px; font-family:'Montserrat',sans-serif; }
+
+/* Outcome cards */
+.outcome-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:48px; }
+.outcome-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); padding:32px; position:relative; overflow:hidden; transition:all var(--transition); }
+.outcome-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--grad-accent); }
+.outcome-card:hover { box-shadow:0 8px 32px rgba(155,89,182,0.1); transform:translateY(-2px); }
+.outcome-num { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+.outcome-title { font-size:20px; font-weight:800; color:var(--text); margin-bottom:8px; }
+.outcome-desc { font-size:14px; color:var(--text2); line-height:1.6; margin-bottom:16px; }
+.outcome-tag { display:inline-block; background:var(--accent-dim); border:1px solid rgba(155,89,182,0.15); border-radius:6px; padding:4px 12px; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; color:var(--accent); margin-right:6px; margin-bottom:6px; }
+.outcome-features { list-style:none; padding:0; margin-top:12px; }
+.outcome-features li { font-size:13px; color:var(--text2); padding:6px 0; border-bottom:1px solid rgba(30,18,48,0.05); display:flex; align-items:center; gap:8px; }
+.outcome-features li:last-child { border-bottom:none; }
+.outcome-features li::before { content:'\2713'; color:var(--accent); font-weight:700; font-size:14px; flex-shrink:0; }
+
+/* Token tables */
+.token-table { width:100%; margin-top:8px; border-collapse:separate; border-spacing:0 5px; }
+.token-table .tt-label { background:var(--bg3); color:var(--text); font-family:'Montserrat',sans-serif; font-size:13px; font-weight:600; padding:10px 16px; border-radius:var(--radius-sm) 0 0 var(--radius-sm); width:240px; white-space:nowrap; border:var(--border); border-right:none; }
+.token-table .tt-value { background:var(--bg2); color:var(--text2); font-family:'Inria Sans',sans-serif; font-size:14px; padding:10px 16px; border:var(--border); border-left:none; border-right:none; }
+.token-table .tt-resolved { background:var(--bg2); color:var(--text); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; padding:10px 16px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; border:var(--border); border-left:none; width:140px; white-space:nowrap; }
+.tt-swatch { display:inline-block; width:16px; height:16px; border-radius:4px; border:1px solid rgba(30,18,48,0.12); vertical-align:middle; margin-right:8px; }
+.token-group { margin-top:16px; }
+.token-group summary { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.08em; cursor:pointer; padding:12px 0; list-style:none; display:flex; align-items:center; gap:8px; user-select:none; transition:color var(--transition); }
+.token-group summary:hover { color:var(--accent2); }
+.token-group summary::before { content:'\25B6'; font-size:10px; transition:transform 0.25s ease; display:inline-block; }
+.token-group[open] summary::before { transform:rotate(90deg); }
+.token-group summary::-webkit-details-marker { display:none; }
+.info-card-img { width:100%; margin-top:12px; border-radius:6px; border:var(--border); object-fit:contain; background:var(--bg3); }
+.atom-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:32px; }
+.atom-card { background:var(--bg2); border:var(--border); border-radius:var(--radius); overflow:hidden; transition:all var(--transition); padding:16px; display:flex; flex-direction:column; gap:12px; }
+.atom-card:hover { border-color:rgba(155,89,182,0.25); box-shadow:0 4px 24px rgba(155,89,182,0.08); }
+.atom-card-img { display:flex; align-items:center; justify-content:center; padding:24px; background:#1a1a1a; border-radius:calc(var(--radius) - 4px); height:220px; }
+.atom-card-img img { max-width:100%; max-height:100%; object-fit:contain; }
+.atom-card-label { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--text); text-align:center; }
+@media (max-width:900px) { .atom-grid { grid-template-columns:repeat(2,1fr); } }
+@media (max-width:500px) { .atom-grid { grid-template-columns:1fr; } }
+.annotated-card { margin:32px 0 0; }
+.annotated-card-inner { position:relative; margin-left:120px; }
+.annotated-card-inner img { width:100%; display:block; border-radius:12px; box-shadow:0 4px 24px rgba(30,18,48,0.08); }
+.card-annotation { position:absolute; display:flex; align-items:center; flex-direction:row-reverse; gap:0; }
+.annotation-tag { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--accent); background:var(--accent-dim); border:1.5px solid rgba(155,89,182,0.2); padding:6px 14px; border-radius:6px; white-space:nowrap; }
+.annotation-line { height:1.5px; background:var(--accent); opacity:0.4; display:inline-block; flex-shrink:0; }
+.annotation-bracket { position:absolute; width:3px; background:var(--accent); opacity:0.3; border-radius:2px; }
+@media (max-width:700px) { .annotated-card-inner { margin-left:0; } .card-annotation { display:none; } .annotation-bracket { display:none; } }
+
+.reveal { opacity:0; transform:translateY(32px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+.case-footer { text-align:center; padding:48px; font-size:13px; color:var(--text3); border-top:var(--border); background:var(--bg3); }
+.case-footer a { color:var(--accent); text-decoration:none; }
+
+@media (max-width:900px) {
+  .case-section { padding:64px 24px; }
+  .cards-grid { grid-template-columns:1fr; }
+  .compare-grid { grid-template-columns:1fr; }
+  .component-grid { grid-template-columns:1fr; }
+  .img-row { grid-template-columns:1fr; }
+  .slot-diagram { grid-template-columns:repeat(2,1fr); }
+  .outcome-grid { grid-template-columns:1fr; }
+  .nav-links { display:none; }
+}
+@media (max-width:600px) {
+  .case-section { padding:48px 16px; }
+  .hero-meta { flex-direction:column; gap:16px; }
+  .audit-grid { grid-template-columns:1fr; }
+  .slot-diagram { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-bar">
+  <a href="somya-portfolio-v4.html" class="back-link">&larr; Back to Portfolio</a>
+  <div class="nav-links">
+    <a href="#sec-need">The Need</a>
+    <a href="#sec-audit">Audit</a>
+    <a href="#sec-tokens">Tokens</a>
+    <a href="#sec-built">What I Built</a>
+    <a href="#sec-deepdive">Deep Dive</a>
+    <a href="#sec-playbook">Playbook</a>
+    <a href="#sec-impact">Impact</a>
+  </div>
+</nav>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ═══ HERO ═══ -->
+<section class="case-section hero-section">
+  <div class="reveal">
+    <div class="hero-tag">Design Systems &middot; Solargraf</div>
+    <div class="hero-title">Solaris 2.0</div>
+    <div class="hero-subtitle">A token-based design system rebuild &mdash; from audit to playbook</div>
+    <div class="hero-divider"></div>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><span class="hero-meta-label">Timeline</span><span class="hero-meta-value">4 months</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Team</span><span class="hero-meta-value">2 Designers</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Company</span><span class="hero-meta-value">Solargraf &middot; Enphase Energy</span></div>
+      <div class="hero-meta-item"><span class="hero-meta-label">Role</span><span class="hero-meta-value">Audit, Token Architecture, Component Build &amp; Playbook Handoff</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ THE NEED ═══ -->
+<section class="case-section" id="sec-need">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> The Need</div>
+    <h2 class="section-title">The old system was slowing everyone down</h2>
+  </div>
+  <div class="cards-grid reveal">
+    <div class="info-card">
+      <div class="info-card-icon">🔓</div>
+      <div class="info-card-title">No token system</div>
+      <div class="info-card-desc">Hard-coded colours, spacings, radii. Every global change meant hundreds of manual updates.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">✂️</div>
+      <div class="info-card-title">Constant detaching</div>
+      <div class="info-card-desc">No auto-layout, fixed widths. Designers detached components every single time.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🧩</div>
+      <div class="info-card-title">Missing components</div>
+      <div class="info-card-desc">New UI patterns never added back to the library &mdash; growing drift between system and product.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">📐</div>
+      <div class="info-card-title">Inconsistency everywhere</div>
+      <div class="info-card-desc">12+ greys, varied spacings, inconsistent radii &mdash; the product felt like several different apps.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AUDIT ═══ -->
+<div class="full-width-section">
+<section class="case-section" id="sec-audit">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> My Contribution &middot; Audit</div>
+    <h2 class="section-title">Finding where things were breaking</h2>
+  </div>
+  <div class="audit-grid reveal">
+    <div class="audit-card">
+      <div class="audit-card-icon">🩶</div>
+      <div class="audit-card-title">12+ shades of grey</div>
+      <div class="audit-card-desc">No naming convention &mdash; every surface used a slightly different grey.</div>
+    </div>
+    <div class="audit-card">
+      <div class="audit-card-icon">↔️</div>
+      <div class="audit-card-title">Inconsistent spacing</div>
+      <div class="audit-card-desc">12px here, 14px there, 16px somewhere else. No scale defined.</div>
+    </div>
+    <div class="audit-card">
+      <div class="audit-card-icon">⬜</div>
+      <div class="audit-card-title">Radius mismatch</div>
+      <div class="audit-card-desc">8px on buttons, 10px on cards, 12px on modals &mdash; none intentional.</div>
+    </div>
+    <div class="audit-card">
+      <div class="audit-card-icon">🔤</div>
+      <div class="audit-card-title">Typography drift</div>
+      <div class="audit-card-desc">Headings, labels, and body copy had no shared type scale.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ TOKEN ARCHITECTURE ═══ -->
+<section class="case-section" id="sec-tokens">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Token Architecture</div>
+    <h2 class="section-title">Two-tier token system</h2>
+    <div class="section-body">
+      <p><strong>Raw tokens</strong> hold primitive values (<code>grey-500</code>, <code>spacing-8</code>). <strong>Semantic tokens</strong> reference them with meaning (<code>text-secondary</code>, <code>surface-mainAction</code>). This separation lets us update contexts independently and enables theme switching without touching components.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SEMANTIC TOKEN TABLES ═══ -->
+<div class="full-width-section">
+<section class="case-section" id="sec-token-tables">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Live Token Reference</div>
+    <h2 class="section-title">The actual tokens powering Solaris</h2>
+  </div>
+
+  <!-- THEME -->
+  <details class="token-group reveal" open>
+    <summary>Theme</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Theme / Primary</td><td class="tt-value">SG_BrandBlue400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2382c4"></span>#2382c4</td></tr>
+      <tr><td class="tt-label">Theme / Success</td><td class="tt-value">SG_Green500</td><td class="tt-resolved"><span class="tt-swatch" style="background:#439e58"></span>#439e58</td></tr>
+      <tr><td class="tt-label">Theme / Warning</td><td class="tt-value">SG_Yellow400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffd02c"></span>#ffd02c</td></tr>
+      <tr><td class="tt-label">Theme / Error</td><td class="tt-value">SG_Red400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#de2100"></span>#de2100</td></tr>
+      <tr><td class="tt-label">Theme / Default</td><td class="tt-value">SG_Grey400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#808080"></span>#808080</td></tr>
+      <tr><td class="tt-label">Theme / Disabled</td><td class="tt-value">SG_Grey100</td><td class="tt-resolved"><span class="tt-swatch" style="background:#f5f5f5"></span>#f5f5f5</td></tr>
+      <tr><td class="tt-label">Theme / Coral</td><td class="tt-value">SG_Coral</td><td class="tt-resolved"><span class="tt-swatch" style="background:#f45270"></span>#f45270</td></tr>
+      <tr><td class="tt-label">Theme / Pink</td><td class="tt-value">SG_BrandPink</td><td class="tt-resolved"><span class="tt-swatch" style="background:#d21086"></span>#d21086</td></tr>
+    </table>
+  </details>
+
+  <!-- TEXT COLORS -->
+  <details class="token-group reveal">
+    <summary>Text</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Text / Heading</td><td class="tt-value">SG_Grey700</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2e2e2e"></span>#2e2e2e</td></tr>
+      <tr><td class="tt-label">Text / Body</td><td class="tt-value">SG_Grey400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#808080"></span>#808080</td></tr>
+      <tr><td class="tt-label">Text / Placeholders</td><td class="tt-value">SG_Grey400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#808080"></span>#808080</td></tr>
+      <tr><td class="tt-label">Text / AlternateBody</td><td class="tt-value">SG_Grey700</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2e2e2e"></span>#2e2e2e</td></tr>
+      <tr><td class="tt-label">Text / MainAction</td><td class="tt-value">SG_White</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffffff;border-color:rgba(0,0,0,0.15)"></span>#ffffff</td></tr>
+      <tr><td class="tt-label">Text / SecondaryAction</td><td class="tt-value">SG_BrandBlue400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2382c4"></span>#2382c4</td></tr>
+      <tr><td class="tt-label">Text / SecondaryHover</td><td class="tt-value">SG_BrandBlue600</td><td class="tt-resolved"><span class="tt-swatch" style="background:#175682"></span>#175682</td></tr>
+      <tr><td class="tt-label">Text / Disabled</td><td class="tt-value">SG_Grey300</td><td class="tt-resolved"><span class="tt-swatch" style="background:#cccccc"></span>#cccccc</td></tr>
+      <tr><td class="tt-label">Text / Success</td><td class="tt-value">SG_Green500</td><td class="tt-resolved"><span class="tt-swatch" style="background:#439e58"></span>#439e58</td></tr>
+      <tr><td class="tt-label">Text / Warning</td><td class="tt-value">SG_Grey700</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2e2e2e"></span>#2e2e2e</td></tr>
+      <tr><td class="tt-label">Text / Error</td><td class="tt-value">SG_Red400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#de2100"></span>#de2100</td></tr>
+    </table>
+  </details>
+
+  <!-- STROKE -->
+  <details class="token-group reveal">
+    <summary>Stroke</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Stroke / Default</td><td class="tt-value">SG_Grey300</td><td class="tt-resolved"><span class="tt-swatch" style="background:#cccccc"></span>#cccccc</td></tr>
+      <tr><td class="tt-label">Stroke / Primary</td><td class="tt-value">SG_Grey200</td><td class="tt-resolved"><span class="tt-swatch" style="background:#dddddd"></span>#dddddd</td></tr>
+      <tr><td class="tt-label">Stroke / Secondary</td><td class="tt-value">SG_Grey400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#808080"></span>#808080</td></tr>
+      <tr><td class="tt-label">Stroke / Active</td><td class="tt-value">SG_BrandBlue400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2382c4"></span>#2382c4</td></tr>
+      <tr><td class="tt-label">Stroke / Success</td><td class="tt-value">SG_Green500</td><td class="tt-resolved"><span class="tt-swatch" style="background:#439e58"></span>#439e58</td></tr>
+      <tr><td class="tt-label">Stroke / Warning</td><td class="tt-value">SG_Yellow400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffd02c"></span>#ffd02c</td></tr>
+      <tr><td class="tt-label">Stroke / Error</td><td class="tt-value">SG_Red400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#de2100"></span>#de2100</td></tr>
+      <tr><td class="tt-label">Stroke / PrimaryHover</td><td class="tt-value">SG_BrandBlue600</td><td class="tt-resolved"><span class="tt-swatch" style="background:#175682"></span>#175682</td></tr>
+    </table>
+  </details>
+
+  <!-- BACKGROUND -->
+  <details class="token-group reveal">
+    <summary>Background</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Background / Primary</td><td class="tt-value">SG_White</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffffff;border-color:rgba(0,0,0,0.15)"></span>#ffffff</td></tr>
+      <tr><td class="tt-label">Background / Active</td><td class="tt-value">SG_BrandBlue200</td><td class="tt-resolved"><span class="tt-swatch" style="background:#eef6fc"></span>#eef6fc</td></tr>
+      <tr><td class="tt-label">Background / Success</td><td class="tt-value">SG_Green200</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ecfef5"></span>#ecfef5</td></tr>
+      <tr><td class="tt-label">Background / Warning</td><td class="tt-value">SG_Yellow300</td><td class="tt-resolved"><span class="tt-swatch" style="background:#fef8ec"></span>#fef8ec</td></tr>
+      <tr><td class="tt-label">Background / Error</td><td class="tt-value">SG_Red200</td><td class="tt-resolved"><span class="tt-swatch" style="background:#fceded"></span>#fceded</td></tr>
+      <tr><td class="tt-label">Background / Alternate</td><td class="tt-value">SG_Grey100</td><td class="tt-resolved"><span class="tt-swatch" style="background:#f5f5f5"></span>#f5f5f5</td></tr>
+      <tr><td class="tt-label">Background / Dark</td><td class="tt-value">SG_Grey800</td><td class="tt-resolved"><span class="tt-swatch" style="background:#1a1a1a"></span>#1a1a1a</td></tr>
+    </table>
+  </details>
+
+  <!-- TRANSPARENT BACKGROUND -->
+  <details class="token-group reveal">
+    <summary>Transparent Background</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">TransparentBG / Highlight</td><td class="tt-value">SG_BrandBlue @ 10%</td><td class="tt-resolved"><span class="tt-swatch" style="background:rgba(35,130,196,0.10)"></span>rgba 10%</td></tr>
+      <tr><td class="tt-label">TransparentBG / Active Disabled</td><td class="tt-value">SG_BrandBlue @ 25%</td><td class="tt-resolved"><span class="tt-swatch" style="background:rgba(35,130,196,0.25)"></span>rgba 25%</td></tr>
+      <tr><td class="tt-label">TransparentBG / Overlay</td><td class="tt-value">SG_Grey800 @ 60%</td><td class="tt-resolved"><span class="tt-swatch" style="background:rgba(26,26,26,0.60)"></span>rgba 60%</td></tr>
+      <tr><td class="tt-label">TransparentBG / Dark</td><td class="tt-value">Black @ 80%</td><td class="tt-resolved"><span class="tt-swatch" style="background:rgba(0,0,0,0.80)"></span>rgba 80%</td></tr>
+      <tr><td class="tt-label">TransparentBG / HighlightGrey</td><td class="tt-value">SG_Grey400 @ 10%</td><td class="tt-resolved"><span class="tt-swatch" style="background:rgba(128,128,128,0.10)"></span>rgba 10%</td></tr>
+    </table>
+  </details>
+
+  <!-- SURFACE -->
+  <details class="token-group reveal">
+    <summary>Surface</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Surface / Neutral</td><td class="tt-value">SG_White</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffffff;border-color:rgba(0,0,0,0.15)"></span>#ffffff</td></tr>
+      <tr><td class="tt-label">Surface / Quiet</td><td class="tt-value">SG_Grey200</td><td class="tt-resolved"><span class="tt-swatch" style="background:#dddddd"></span>#dddddd</td></tr>
+      <tr><td class="tt-label">Surface / MainAction</td><td class="tt-value">SG_BrandBlue400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2382c4"></span>#2382c4</td></tr>
+      <tr><td class="tt-label">Surface / MainActionHover</td><td class="tt-value">SG_BrandBlue600</td><td class="tt-resolved"><span class="tt-swatch" style="background:#175682"></span>#175682</td></tr>
+      <tr><td class="tt-label">Surface / Success</td><td class="tt-value">SG_Green500</td><td class="tt-resolved"><span class="tt-swatch" style="background:#439e58"></span>#439e58</td></tr>
+      <tr><td class="tt-label">Surface / Warning</td><td class="tt-value">SG_Yellow400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffd02c"></span>#ffd02c</td></tr>
+      <tr><td class="tt-label">Surface / Error</td><td class="tt-value">SG_Red400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#de2100"></span>#de2100</td></tr>
+      <tr><td class="tt-label">Surface / Dark</td><td class="tt-value">SG_Grey400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#808080"></span>#808080</td></tr>
+      <tr><td class="tt-label">Surface / Bold</td><td class="tt-value">SG_Grey600</td><td class="tt-resolved"><span class="tt-swatch" style="background:#3d3d3d"></span>#3d3d3d</td></tr>
+      <tr><td class="tt-label">Surface / Disabled</td><td class="tt-value">SG_Grey100</td><td class="tt-resolved"><span class="tt-swatch" style="background:#f5f5f5"></span>#f5f5f5</td></tr>
+    </table>
+  </details>
+
+  <!-- GRADIENT -->
+  <details class="token-group reveal">
+    <summary>Gradient</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Gradient / GradientStart</td><td class="tt-value">SG_WarmBlue</td><td class="tt-resolved"><span class="tt-swatch" style="background:#3471bc"></span>#3471bc</td></tr>
+      <tr><td class="tt-label">Gradient / GradientEnd</td><td class="tt-value">SG_WarmPink</td><td class="tt-resolved"><span class="tt-swatch" style="background:#be8fad"></span>#be8fad</td></tr>
+      <tr><td class="tt-label">Gradient / LoadingStart</td><td class="tt-value">SG_White200</td><td class="tt-resolved"><span class="tt-swatch" style="background:#f1f1f1"></span>#f1f1f1</td></tr>
+      <tr><td class="tt-label">Gradient / LoadingEnd</td><td class="tt-value">SG_White300</td><td class="tt-resolved"><span class="tt-swatch" style="background:#f9f9f9"></span>#f9f9f9</td></tr>
+    </table>
+  </details>
+
+  <!-- ICON -->
+  <details class="token-group reveal">
+    <summary>Icon</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Icon / Default</td><td class="tt-value">SG_BrandBlue400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2382c4"></span>#2382c4</td></tr>
+      <tr><td class="tt-label">Icon / Secondary</td><td class="tt-value">SG_Grey700</td><td class="tt-resolved"><span class="tt-swatch" style="background:#2e2e2e"></span>#2e2e2e</td></tr>
+      <tr><td class="tt-label">Icon / Primary</td><td class="tt-value">SG_Grey400</td><td class="tt-resolved"><span class="tt-swatch" style="background:#808080"></span>#808080</td></tr>
+      <tr><td class="tt-label">Icon / Light</td><td class="tt-value">SG_White</td><td class="tt-resolved"><span class="tt-swatch" style="background:#ffffff;border-color:rgba(0,0,0,0.15)"></span>#ffffff</td></tr>
+      <tr><td class="tt-label">Icon / Disabled</td><td class="tt-value">SG_Grey300</td><td class="tt-resolved"><span class="tt-swatch" style="background:#cccccc"></span>#cccccc</td></tr>
+    </table>
+  </details>
+
+  <!-- SPACING -->
+  <details class="token-group reveal">
+    <summary>Spacing</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Layout / page-padding</td><td class="tt-value">spacing-xxl</td><td class="tt-resolved">48px</td></tr>
+      <tr><td class="tt-label">Layout / container-gap</td><td class="tt-value">spacing-xl</td><td class="tt-resolved">24px</td></tr>
+      <tr><td class="tt-label">Layout / section-gap</td><td class="tt-value">spacing-xl</td><td class="tt-resolved">24px</td></tr>
+      <tr><td class="tt-label">Layout / compact-padding</td><td class="tt-value">spacing-lg</td><td class="tt-resolved">16px</td></tr>
+      <tr><td class="tt-label">Content / element-gap</td><td class="tt-value">spacing-xs</td><td class="tt-resolved">4px</td></tr>
+      <tr><td class="tt-label">Content / element-gap 2</td><td class="tt-value">spacing-s</td><td class="tt-resolved">8px</td></tr>
+      <tr><td class="tt-label">Content / element-gap 3</td><td class="tt-value">spacing-m</td><td class="tt-resolved">12px</td></tr>
+      <tr><td class="tt-label">Content / stack-gap</td><td class="tt-value">spacing-xl</td><td class="tt-resolved">24px</td></tr>
+      <tr><td class="tt-label">Content / dense-element-gap</td><td class="tt-value">spacing-lg</td><td class="tt-resolved">16px</td></tr>
+    </table>
+  </details>
+
+  <!-- TYPOGRAPHY -->
+  <details class="token-group reveal">
+    <summary>Typography</summary>
+    <table class="token-table">
+      <tr><td class="tt-label">Header-Medium</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">24px / 500</td></tr>
+      <tr><td class="tt-label">Header-Regular</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">24px / 400</td></tr>
+      <tr><td class="tt-label">Subheader-Medium</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">16px / 500</td></tr>
+      <tr><td class="tt-label">Subheader-Regular</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">16px / 400</td></tr>
+      <tr><td class="tt-label">Body-Medium</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">14px / 500</td></tr>
+      <tr><td class="tt-label">Body-Regular</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">14px / 400</td></tr>
+      <tr><td class="tt-label">Subtext-Medium</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">12px / 500</td></tr>
+      <tr><td class="tt-label">Subtext-Regular</td><td class="tt-value">Enphase Visuelt</td><td class="tt-resolved">12px / 400</td></tr>
+    </table>
+  </details>
+</section>
+</div>
+
+<!-- ═══ WHAT I BUILT ═══ -->
+<div class="full-width-section">
+<section class="case-section" id="sec-built">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> What I Built</div>
+    <h2 class="section-title">10 components across three levels</h2>
+  </div>
+  <div class="component-grid reveal">
+    <div class="component-card">
+      <div class="component-card-type">Atoms</div>
+      <div class="component-card-num">4</div>
+      <div class="component-card-label">Foundation pieces</div>
+      <ul class="component-card-list">
+        <li>Button (primary, secondary, ghost, destructive)</li>
+        <li>Input field (text, number, with validation states)</li>
+        <li>Badge / Tag</li>
+        <li>Toggle switch</li>
+      </ul>
+    </div>
+    <div class="component-card">
+      <div class="component-card-type">Molecules</div>
+      <div class="component-card-num">5</div>
+      <div class="component-card-label">Composed patterns</div>
+      <ul class="component-card-list">
+        <li>Form group (label + input + helper text)</li>
+        <li>Dropdown / Select</li>
+        <li>Search bar</li>
+        <li>Stat card</li>
+        <li>Toast / Notification</li>
+      </ul>
+    </div>
+    <div class="component-card">
+      <div class="component-card-type">Organism</div>
+      <div class="component-card-num">1</div>
+      <div class="component-card-label">Full pattern</div>
+      <ul class="component-card-list">
+        <li>Data table (sortable columns, pagination, row actions, bulk select, responsive)</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+</div>
+
+<!-- ═══ DEEP DIVE: INPUT CARD FORM ═══ -->
+<section class="case-section" id="sec-deepdive">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Deep Dive</div>
+    <h2 class="section-title">Input Card Form &mdash; configurable by design</h2>
+    <div class="section-body">
+      <p>The most-used pattern in the product, rebuilt with a <strong>slot-based architecture</strong> &mdash; a Card shell with named content slots. Designers swap content without ever detaching.</p>
+    </div>
+  </div>
+
+  <div class="deep-dive-sub reveal">Component structure</div>
+
+  <div class="annotated-card reveal">
+    <div class="annotated-card-inner">
+      <img src="Images/sol-card-usage.png" alt="Card component with slots filled with form elements">
+      <div class="card-annotation" style="top:8%;left:-110px;">
+        <span class="annotation-line" style="width:40px;"></span>
+        <span class="annotation-tag">Title</span>
+      </div>
+      <div class="card-annotation" style="top:25%;left:-120px;">
+        <span class="annotation-line" style="width:40px;"></span>
+        <span class="annotation-tag">Content</span>
+      </div>
+      <div class="card-annotation card-annotation-slots" style="top:60%;left:-110px;">
+        <span class="annotation-line" style="width:40px;"></span>
+        <span class="annotation-tag">Slots</span>
+      </div>
+      <span class="annotation-bracket" style="left:-12px;top:42%;height:40%;"></span>
+    </div>
+  </div>
+
+  <div class="img-row reveal">
+    <div>
+      <img src="Images/sol-slot-screenshots.png" alt="Slot screenshots showing different configurations">
+      <div class="img-caption">Slot configurations &mdash; same Card, different content</div>
+    </div>
+    <div>
+      <img src="Images/sol-slot-config.png" alt="Slot configurability in Figma">
+      <div class="img-caption">Figma slot panel &mdash; swap content without detaching</div>
+    </div>
+  </div>
+
+  <div class="deep-dive-sub reveal">Form input atoms</div>
+  <div class="section-body reveal">
+    <p>Each atom ships with a full variant set &mdash; default, focus, error, success, and disabled &mdash; so every interaction state is covered out of the box.</p>
+  </div>
+
+  <div class="atom-grid reveal">
+    <div class="atom-card">
+      <div class="atom-card-img"><img src="Images/sol-input-text.png" alt="Text input variants"></div>
+      <div class="atom-card-label">Text Input</div>
+    </div>
+    <div class="atom-card">
+      <div class="atom-card-img"><img src="Images/sol-input-checkbox.png" alt="Checkbox variants"></div>
+      <div class="atom-card-label">Checkbox</div>
+    </div>
+    <div class="atom-card">
+      <div class="atom-card-img"><img src="Images/sol-input-dropdown.png" alt="Dropdown variants"></div>
+      <div class="atom-card-label">Dropdown</div>
+    </div>
+    <div class="atom-card">
+      <div class="atom-card-img"><img src="Images/sol-input-datepicker.png" alt="Date picker variants"></div>
+      <div class="atom-card-label">Date Picker</div>
+    </div>
+    <div class="atom-card">
+      <div class="atom-card-img"><img src="Images/sol-input-toggle.png" alt="Toggle switch variants"></div>
+      <div class="atom-card-label">Toggle</div>
+    </div>
+    <div class="atom-card">
+      <div class="atom-card-img"><img src="Images/sol-input-upload.png" alt="File upload variants"></div>
+      <div class="atom-card-label">File Upload</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPARISON (continued from What I Built) ═══ -->
+<!-- ═══ TWO OUTCOMES ═══ -->
+<section class="case-section" id="sec-playbook">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Two Outcomes</div>
+    <h2 class="section-title">A Figma library and a developer playbook</h2>
+  </div>
+
+  <div class="outcome-grid reveal">
+    <div class="outcome-card">
+      <div class="outcome-num">Outcome 01</div>
+      <div class="outcome-title">Figma Design System</div>
+      <div>
+        <span class="outcome-tag">Figma</span>
+        <span class="outcome-tag">Components</span>
+        <span class="outcome-tag">Tokens</span>
+        <span class="outcome-tag">Auto-layout</span>
+      </div>
+      <ul class="outcome-features">
+        <li>4 atoms, 5 molecules, 1 organism</li>
+        <li>Full variant sets &mdash; all states, sizes, types</li>
+        <li>Zero detaching &mdash; configurable width, slots, auto-layout</li>
+        <li>Two-tier token architecture baked in</li>
+      </ul>
+    </div>
+
+    <div class="outcome-card">
+      <div class="outcome-num">Outcome 02</div>
+      <div class="outcome-title">Design System Playbook</div>
+      <div>
+        <span class="outcome-tag">Windsurf</span>
+        <span class="outcome-tag">Claude Opus</span>
+        <span class="outcome-tag">Interactive</span>
+        <span class="outcome-tag">Dev handoff</span>
+      </div>
+      <ul class="outcome-features">
+        <li>Live component variants in the browser</li>
+        <li>Copy-ready code snippets per component</li>
+        <li>Visual prop controls &mdash; toggle states, sizes interactively</li>
+        <li>AI-assisted build to accelerate handoff</li>
+      </ul>
+      <a href="solaris-playground/export-button.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:10px 20px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;border-radius:8px;text-decoration:none;transition:all 0.2s ease;box-shadow:0 2px 8px rgba(155,89,182,0.2);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 16px rgba(155,89,182,0.3)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(155,89,182,0.2)'">
+        Try out the sample playground
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══ IMPACT ═══ -->
+<section class="case-section" id="sec-impact">
+  <div class="reveal">
+    <div class="section-label"><div class="section-label-line"></div> Impact</div>
+    <h2 class="section-title">One system, one language, zero detaching</h2>
+  </div>
+  <div class="cards-grid reveal" style="grid-template-columns:repeat(3,1fr)">
+    <div class="info-card" style="text-align:center">
+      <div class="info-card-num">10+</div>
+      <div class="info-card-title">Components built</div>
+      <div class="info-card-desc">Atoms, molecules, and organisms</div>
+    </div>
+    <div class="info-card" style="text-align:center">
+      <div class="info-card-num">80+</div>
+      <div class="info-card-title">Semantic tokens</div>
+      <div class="info-card-desc">Colour, spacing, and typography</div>
+    </div>
+    <div class="info-card" style="text-align:center">
+      <div class="info-card-num">2-tier</div>
+      <div class="info-card-title">Token architecture</div>
+      <div class="info-card-desc">Global &rarr; Alias powering the full system</div>
+    </div>
+  </div>
+</section>
+
+<footer class="case-footer">
+  <p>Designed by <a href="somya-portfolio-v4.html">Somya</a> &middot; Solaris 2.0 Design System &middot; Solargraf &middot; Enphase Energy &middot; 2026</p>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+const bar = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (window.scrollY / h * 100) + '%';
+});
+</script>
+</body>
+</html>
